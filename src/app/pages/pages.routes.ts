@@ -8,6 +8,7 @@ import { GuiasComponent } from './guias/guias.component';
 import { StockComponent } from './stock/stock.component';
 import { ProgressComponent } from './progress/progress.component';
 import { Graficas1Component } from './graficas1/graficas1.component';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 const pagesRoutes: Routes = [
     {   path: '',
@@ -18,6 +19,7 @@ const pagesRoutes: Routes = [
             { path: 'stock', component: StockComponent },
             { path: 'progress', component: ProgressComponent },
             { path: 'graficas1', component: Graficas1Component },
+            { path: 'account-settings', component: AccountSettingsComponent },
             { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
     },
