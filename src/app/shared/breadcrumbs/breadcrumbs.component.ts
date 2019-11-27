@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivationEnd } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
+import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -7,9 +10,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BreadcrumbsComponent implements OnInit {
 
-  constructor() { }
+  granTitulo = '';
+
+  constructor( private router: Router,
+               private title: Title,
+               private meta: Meta) {
+
+    this.getDataRoute()
+        .subscribe( data => {
+          console.log( data.titulo );
+          this.granTitulo = data.titulo;
+          this.title.setTitle( data.titulo );
+          // esta in clusion permite cambiar los metatags de la pagina
+          // para incluir descripciones y cosas varias
+          const metaTag: MetaDefinition = {
+            name: 'description',
+            content: this.granTitulo,
+          };
+          this.meta.updateTag( metaTag );
+
+        });
+
+  }
 
   ngOnInit() {
   }
 
+  getDataRoute() {
+
+    return this.router.events
+      .pipe(
+        // primero se filtra por ActivationEnd
+        filter( evento => evento instanceof ActivationEnd ),
+        // segundo, de lo ya filtrado, se filtra solo por el child que esta con "data" nulo
+        filter( (evento: ActivationEnd) => evento.snapshot.firstChild === null ),
+        // ahora de lo que resulta, solo quiero lo referido a snapshot.data
+        map( (evento: ActivationEnd) => evento.snapshot.data )
+        //
+      );
+
+  }
 }
