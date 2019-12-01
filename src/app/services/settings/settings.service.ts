@@ -13,12 +13,6 @@ export class SettingsService {
   constructor() {
     this.cargarAjustes();
   }
-
-  guardarAjustes() {
-    // console.log('guardado en localStrorage');
-    localStorage.setItem( 'ajustes', JSON.stringify( this.ajustes ) );
-  }
-
   cargarAjustes() {
     // existe la variable?
     if ( localStorage.getItem( 'ajustes' ) ) {
@@ -29,6 +23,10 @@ export class SettingsService {
       // console.log('valores por default');
       this.aplicarTema( this.ajustes.tema );
     }
+  }
+
+  guardarAjustes() {
+    localStorage.setItem( 'ajustes', JSON.stringify( this.ajustes ) );
   }
 
   aplicarTema( tema: string ) {

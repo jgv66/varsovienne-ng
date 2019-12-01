@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -11,14 +12,22 @@ import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
 export class BreadcrumbsComponent implements OnInit {
 
   granTitulo = '';
+  nombreUsuario = '';
 
   constructor( private router: Router,
                private title: Title,
-               private meta: Meta) {
-
+               private meta: Meta,
+               public login: LoginService) {
+    //
+    try {
+      this.nombreUsuario = this.login.usuario.nombre;
+    } catch (error) {
+      this.nombreUsuario = '';
+    }
+    //
     this.getDataRoute()
         .subscribe( data => {
-          console.log( data.titulo );
+          // console.log( data.titulo );
           this.granTitulo = data.titulo;
           this.title.setTitle( data.titulo );
           // esta in clusion permite cambiar los metatags de la pagina

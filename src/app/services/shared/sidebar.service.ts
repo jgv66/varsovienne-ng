@@ -8,23 +8,25 @@ export class SidebarService {
   menuInformes: any = [
     {
       titulo: 'Informes',
-      icono: 'mdi mdi-gauge',
+      icono: 'mdi mdi-cloud-print-outline',
       submenu: [
-        { titulo: 'Stock', url: '/stock' },
+        { titulo: 'Stock por Locales', url: '/stock' },
+        { titulo: 'Stock por Producto', url: '/stockP' },
+        // { titulo: 'Informe de Guías', url: '/iguias' },
       ]
     }
-  ]
+  ];
 
   menuDocumentos: any = [
     {
       titulo: 'Documentos',
-      icono: 'mdi mdi-gauge',
+      icono: 'mdi mdi-cube-send',
       submenu: [
-        { titulo: 'Guías de Traslado', url: '/guias' },
-        { titulo: 'ProgressBar',       url: '/progress' },
-        { titulo: 'Gráficas',          url: '/graficas1' },
-        { titulo: 'Promesas',          url: '/promesas' },
-        { titulo: 'RxJs',              url: '/rxjs' },
+        { titulo: 'Consumo Interno',        url: '/guiasci' },
+        { titulo: 'Traslado entre Locales', url: '/guias' },
+        { titulo: 'Gráficas',               url: '/graficas1' },
+        // { titulo: 'Promesas',          url: '/promesas' },
+        // { titulo: 'RxJs',              url: '/rxjs' },
       ]
     }
   ];

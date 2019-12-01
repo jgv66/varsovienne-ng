@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GuiasComponent implements OnInit {
 
+  bodegas = [];
+  bodegaOrigen = '';
+  bodegaDestino = '';
+  cargando = false;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  ValidarConsumo() {}
 
 }

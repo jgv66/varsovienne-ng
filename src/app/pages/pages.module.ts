@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { PAGES_ROUTES } from './pages.routes';
 
-import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // ng2-charts
 import { ChartsModule } from 'ng2-charts';
@@ -13,7 +15,9 @@ import { SharedModule } from '../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
 import { StockComponent } from './stock/stock.component';
+import { StockpComponent } from './stockp/stockp.component';
 import { GuiasComponent } from './guias/guias.component';
+import { GuiasciComponent } from './guiasci/guiasci.component';
 import { IncrementadorComponent } from '../components/incrementador/incrementador.component';
 import { Graficas1Component } from './graficas1/graficas1.component';
 import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.component';
@@ -27,13 +31,16 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         DashboardComponent,
         ProgressComponent,
         StockComponent,
+        StockpComponent,
         GuiasComponent,
+        GuiasciComponent,
         IncrementadorComponent,
         Graficas1Component,
         GraficoDonaComponent,
         AccountSettingsComponent,
         PromesasComponent,
-        RxjsComponent
+        RxjsComponent,
+        GuiasciComponent
     ],
     exports: [
         DashboardComponent,
@@ -42,9 +49,12 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         GuiasComponent
     ],
     imports: [
+        CommonModule,
         SharedModule,
         PAGES_ROUTES,
+        HttpClientModule,
         FormsModule,
+        ReactiveFormsModule,
         ChartsModule,
     ]
 })

@@ -4,65 +4,27 @@
 <section id="wrapper" class="login-register login-sidebar" style="background-image:url(assets/images/background/login-register.jpg);">
     <div class="login-box card">
         <div class="card-body">
-            <form class="form-horizontal form-material" (ngSubmit)="ingresar()" id="loginform" action="index.html">
+            <form class="form-horizontal form-material" (ngSubmit)="doLogin()" id="loginform" action="index.html">
                 <a href="javascript:void(0)" class="text-center db">
-                    <img src="assets/images/logo-icon.png" alt="Home" />
-                    <br/>
-                    <img src="assets/images/logo-text.png" alt="Home" />
+                    <img width="91" height="51" src="https://varsovienne.cl/wp-content/uploads/2019/08/logo-header.jpg" class="vc_single_image-img attachment-full" alt="" sizes="(max-width: 183px) 100vw, 183px">
                 </a>
-                <h3 class="box-title m-t-40 m-b-0">Ingresar Ahora</h3><small>Ingrese sus datos!</small>
+                <h3 class="box-title m-t-40 m-b-0 text-center">Ingresar</h3>
                 <div class="form-group m-t-40">
                     <div class="col-xs-12">
-                        <input class="form-control" type="text" required="" placeholder="Username">
+                        <input class="form-control" type="text" name="email" [(ngModel)]="email" placeholder="Username">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control" type="password" required="" placeholder="Password">
+                        <input class="form-control" type="password" name="code" [(ngModel)]="code" placeholder="Password">
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-md-12">
-                        <div class="checkbox checkbox-primary pull-left p-t-0">
-                            <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue">
-                            <label for="checkbox-signup"> Recuérdeme </label>
-                        </div>
-                        <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Olvidó pwd?</a> </div>
-                </div>
                 <div class="form-group text-center m-t-20">
+
+                    <mat-progress-bar *ngIf=" cargando " mode="indeterminate"></mat-progress-bar>
+
                     <div class="col-xs-12">
                         <button class="btn btn-info btn-lg btn-block text-uppercase btn-rounded" type="submit">Ingresar</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 m-t-10 text-center">
-                        <div class="social">
-                            <a href="javascript:void(0)" class="btn  btn-facebook" data-toggle="tooltip" title="Login with Facebook"> <i aria-hidden="true" class="fa fa-facebook"></i> </a>
-                            <a href="javascript:void(0)" class="btn btn-googleplus" data-toggle="tooltip" title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group m-b-0">
-                    <div class="col-sm-12 text-center">
-                        No posee una cuenta? <a href="pages-register2.html" class="text-primary m-l-5"><b>Regístrese</b></a>
-                    </div>
-                </div>
-            </form>
-            <form class="form-horizontal" id="recoverform" action="index.html">
-                <div class="form-group ">
-                    <div class="col-xs-12">
-                        <h3>Recuperar Password</h3>
-                        <p class="text-muted">Ingrese su correo y le enviaremos las instrucciones.</p>
-                    </div>
-                </div>
-                <div class="form-group ">
-                    <div class="col-xs-12">
-                        <input class="form-control" type="text" required="" placeholder="Email">
-                    </div>
-                </div>
-                <div class="form-group text-center m-t-20">
-                    <div class="col-xs-12">
-                        <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
                     </div>
                 </div>
             </form>

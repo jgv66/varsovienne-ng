@@ -1,1 +1,29 @@
-<p>guias works!</p>
+<form (ngSubmit)="ValidarConsumo()">
+    <div class="form-row">
+        <div class="col">
+            <select class="form-control" name="bodegaOrigen" [(ngModel)]="bodegaOrigen">
+                <option value="">Local de Origen</option>
+                <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-control" name="bodegaDestino" [(ngModel)]="bodegaDestino">
+                <option value="">Local de Destino</option>
+                <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- <div class="form-row" style=" margin-left: 7px;">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck" name="conStock" [(ngModel)]="conStock">
+            <label class="form-check-label" for="gridCheck">
+                  Solo productos con stock
+                </label>
+        </div>
+    </div> -->
+</form>
+
+<div class="progress" style="height: 8px;" *ngIf=" cargando ">
+    <div class="progress-bar progress-bar-striped  progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
