@@ -9,6 +9,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // ng2-charts
 import { ChartsModule } from 'ng2-charts';
 
+// material modules
+import { MaterialModule } from './../material.module';
+
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -24,6 +27,8 @@ import { GraficoDonaComponent } from '../components/grafico-dona/grafico-dona.co
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
+import { BuscarCodigosComponent } from '../components/buscar-codigos/buscar-codigos.component';
+import { EditalineaComponent } from '../components/editalinea/editalinea.component';
 
 @NgModule({
     declarations: [
@@ -40,13 +45,17 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         AccountSettingsComponent,
         PromesasComponent,
         RxjsComponent,
-        GuiasciComponent
+        GuiasciComponent,
+        BuscarCodigosComponent,
+        EditalineaComponent
     ],
     exports: [
         DashboardComponent,
         ProgressComponent,
         StockComponent,
-        GuiasComponent
+        GuiasComponent,
+        BuscarCodigosComponent,
+        EditalineaComponent
     ],
     imports: [
         CommonModule,
@@ -56,6 +65,7 @@ import { RxjsComponent } from './rxjs/rxjs.component';
         FormsModule,
         ReactiveFormsModule,
         ChartsModule,
+        MaterialModule,
     ]
 })
 export class PagesModule { }

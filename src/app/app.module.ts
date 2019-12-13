@@ -12,8 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // material
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTableModule } from '@angular/material/table';
+import { MaterialModule } from './material.module';
 
 // servicios
 import { ServiceModule } from './services/service.module';
@@ -28,7 +27,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,8 +39,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     BsDatepickerModule.forRoot(),
     ServiceModule,
     BrowserAnimationsModule,
-    MatProgressBarModule,
-    MatTableModule
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]

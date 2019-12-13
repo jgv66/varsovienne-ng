@@ -32,6 +32,7 @@ export class StockComponent implements OnInit {
         this.bodegas = resultado.datos;
         this.cargando = false;
       });
+
   }
 
   consultaStock() {

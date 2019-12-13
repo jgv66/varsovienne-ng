@@ -1,7 +1,6 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-// import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +30,6 @@ export class LoginService {
     this.http.post( xUrl, { id: this.usuario.id } )
         .subscribe(
           (data: any) => {
-              console.log( 'locales', data.datos );
               try {
                 this.localesPermitidos = ( data.datos.length > 0 ) ? data.datos : [];
               } catch (error) {

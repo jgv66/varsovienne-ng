@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   API_URL: 'https://api.kinetik.cl/varsovienne'
-  // API_URL: 'http://localhost:3045'
 };
 
 /*
