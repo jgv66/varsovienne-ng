@@ -29,6 +29,8 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { BuscarCodigosComponent } from '../components/buscar-codigos/buscar-codigos.component';
 import { EditalineaComponent } from '../components/editalinea/editalinea.component';
+import { IguiascComponent } from './iguiasc/iguiasc.component';
+import { GuiasrecepComponent } from './guiasrecep/guiasrecep.component';
 
 @NgModule({
     declarations: [
@@ -47,7 +49,9 @@ import { EditalineaComponent } from '../components/editalinea/editalinea.compone
         RxjsComponent,
         GuiasciComponent,
         BuscarCodigosComponent,
-        EditalineaComponent
+        EditalineaComponent,
+        IguiascComponent,
+        GuiasrecepComponent
     ],
     exports: [
         DashboardComponent,

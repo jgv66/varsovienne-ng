@@ -58,24 +58,4 @@ export class LoginComponent implements OnInit {
     );
   }
 
-/*
-    .subscribe(
-      data => {
-        this.cargando = false;
-        if ( data['resultado'] === 'ok' && data['datos'].length > 0 ) {
-          this.loginService.put( data['datos'].nombre );
-          console.log('logeado');
-          this.router.navigate(['/main/home']);
-        } else {
-          alert( 'Usuario/Clave no coinciden. Reintente.' );
-        }
-      },
-      err => {
-        console.log('no logueado');
-        this.cargando = false;
-        console.error(err);
-      }
-    );
-*/
-
 }

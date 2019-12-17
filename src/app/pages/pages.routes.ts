@@ -13,16 +13,20 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { StockpComponent } from './stockp/stockp.component';
+import { IguiascComponent } from './iguiasc/iguiasc.component';
+import { GuiasrecepComponent } from './guiasrecep/guiasrecep.component';
 
 const pagesRoutes: Routes = [
     {   path: '',
         component: PagesComponent,
         children: [
             { path: 'dashboard',         component: DashboardComponent       , data: { titulo: 'Dashboard' } },
-            { path: 'guiasci',           component: GuiasciComponent         , data: { titulo: 'Guías de Consumo Interno' } },
-            { path: 'guias',             component: GuiasComponent           , data: { titulo: 'Guías de Traslado entre Locales' } },
+            { path: 'guiasci',           component: GuiasciComponent         , data: { titulo: 'Guía de Consumo Interno' } },
+            { path: 'guiastr',           component: GuiasComponent           , data: { titulo: 'Guía de Traslado entre Locales' } },
+            { path: 'guiasrecep',        component: GuiasrecepComponent      , data: { titulo: 'Guía de Recepción de Traslado' } },
             { path: 'stock',             component: StockComponent           , data: { titulo: 'Stock por Locales' } },
             { path: 'stockP',            component: StockpComponent          , data: { titulo: 'Stock por Producto' } },
+            { path: 'iguiasc',           component: IguiascComponent         , data: { titulo: 'Informe de Guias de Consumo' } },
             { path: 'progress',          component: ProgressComponent        , data: { titulo: 'Progress Bar' } },
             { path: 'graficas1',         component: Graficas1Component       , data: { titulo: 'Gráficos' } },
             { path: 'account-settings',  component: AccountSettingsComponent , data: { titulo: 'Ajustes del Tema' } },

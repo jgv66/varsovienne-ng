@@ -1,0 +1,105 @@
+<div class="card bg-warning" style="margin-top: 15px; margin-bottom: 5px; height: 110px;">
+    <form (ngSubmit)="ValidarRecepcion()">
+        <div class="form-row" style="margin-top: 5px;">
+            <div class="col-10" style="margin-top: 7px;">
+                <label class="col-2 col-form-label">Local Destino</label>
+                <select class="form-control col-8 text-left" name="destino" [(ngModel)]="destino">
+                    <option value="">Local Destino del Traslado</option>
+                    <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row" style="margin-top: 10px;">
+            <div class="col-10">
+                <label class="col-2 col-form-label ">Número de Folio</label>
+                <input name="folio" [(ngModel)]="folio" type="number" class="form-control col-7" placeholder="Folio del traslado?" aria-label="folio" aria-describedby="basic-addon1" style="max-width: 200px;">
+
+                <label class="col-3 col-form-label text-right">Número Interno</label>
+                <input name="nrointerno" [(ngModel)]="nrointerno" type="number" class="form-control col-7" placeholder="Folio del traslado?" aria-label="folio" aria-describedby="basic-addon1" style="max-width: 213px;">
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<mat-progress-bar *ngIf=" leyendo " mode="indeterminate"></mat-progress-bar>
+
+<div class="form-row" style="margin-top: 30px;">
+    <div class="col-8">
+        <label class="col-3 col-form-label">Local Origen</label>
+        <select class="form-control col-9 text-left" name="enca.bodega" [(ngModel)]="enca.bodega" disabled>
+            <option value="">Local Origen del Traslado</option>
+            <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
+        </select>
+    </div>
+    <div class="col-4" style="margin-top:7px; padding-left: 10px;">
+        <label>Documento es Electrónico</label>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="enca.electronico" [(ngModel)]="enca.electronico" id="radioSI" [value]="true" disabled>
+            <label class="form-check-label" for="radioSI">Sí</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="enca.electronico" [(ngModel)]="enca.electronico" id="radioNO" [value]="false" disabled>
+            <label class="form-check-label" for="radioNO">No</label>
+        </div>
+    </div>
+</div>
+
+<div class="form-row" style="margin-top: 10px;">
+    <div class="col-8">
+        <label class="col-3 col-form-label">Fecha</label>
+        <input class="form-control col-9" style="max-width: 200px ;" type="date" name="enca.fecha" [(ngModel)]="enca.fecha" placeholder="Fecha desde" disabled>
+    </div>
+</div>
+
+<div class="form-row" style="margin-top: 10px;">
+    <div class="col-8">
+        <label class="col-3 col-form-label">Glosa</label>
+        <input class="form-control col-9" type="text" name="enca.glosa" [(ngModel)]="enca.glosa" placeholder="Glosa del documento" disabled>
+    </div>
+    <div class="col-4" *ngIf="deta.length > 0 ">
+        <button class="btn btn-primary  btn-block" type="submit">Validar y Grabar el Traspaso de Mercaderías</button>
+    </div>
+</div>
+
+<div classs="card" style="margin-top: 10px;">
+    <table class="table table-striped table-hover">
+        <thead class="bg-dark">
+            <tr translate="no">
+                <th scope="col">Código</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">UM</th>
+                <th scope="col" class="text-right">Precio</th>
+                <th scope="col" class="text-right">Sub-Total</th>
+                <th scope="col" class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody translate="no">
+            <tr *ngFor="let det of deta">
+                <td style="padding-top: 18px;" scope="row">{{det.codigo}}</td>
+                <td style="padding-top: 18px;">{{det.descripcion}}</td>
+                <td style="padding-top: 18px;">{{det.cantidad | number:"1.0-3"}}</td>
+                <td style="padding-top: 18px;">{{det.unidadMed}}</td>
+                <td style="padding-top: 18px;" class="text-right">{{det.netoUnitario | number:"1.0-0"}}</td>
+                <td style="padding-top: 18px;" class="text-right">{{det.subTotal | number:"1.0-0"}}</td>
+                <td class="text-center">
+                    <a class="has-arrow waves-effect text-dark"><i class="mdi mdi-pencil mdi-36px"></i></a>
+                    <a class="fas fa-check waves-effect text-dark"><i class="mdi mdi-close-circle mdi-36px"></i></a>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th class="text-right">Total</th>
+                <th class="text-right">{{ totalItemes | number:"1.0-0"}}</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tfoot>
+    </table>
+</div>

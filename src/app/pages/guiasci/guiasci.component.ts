@@ -66,6 +66,7 @@ export class GuiasciComponent implements OnInit {
   }
 
   inicializar() {
+    this.deta = [];
     this.enca = { tipo: 'S',
                   bodega: '',
                   numero: undefined,
@@ -85,6 +86,7 @@ export class GuiasciComponent implements OnInit {
                   neto: 0,
                   iva: 0,
                   bruto: 0 };
+    this.recalculaTotal();
   }
 
   ValidarConsumo() {
@@ -123,7 +125,13 @@ export class GuiasciComponent implements OnInit {
                     //
                     this.grabando = false;
                     if ( data.resultado === 'ok' ) {
-                      Swal.fire('La guía de consumo fue grabada con éxito');
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'FOLIO: ' + data.datos[0].folio,
+                        text: 'Guía de Consumo fue grabada con éxito',
+                        footer: '<a href>Nro.Interno Softlland: ' + data.datos[0].nroint + ' </a>'
+                      });
+                      this.inicializar();
                     } else {
                       Swal.fire({
                         icon: 'error',
@@ -145,7 +153,7 @@ export class GuiasciComponent implements OnInit {
                       unidadMed: event.unidadMed,
                       cantidad: event.cantidad,
                       netoUnitario: event.netoUnitario,
-                      subTotal: event.cantidad * event.netoUnitario
+                      subTotal: Math.round( event.cantidad * event.netoUnitario )
                     }
                   );
     this.recalculaTotal();

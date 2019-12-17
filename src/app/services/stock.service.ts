@@ -40,6 +40,11 @@ export class StockService {
     return this.http.get( xUrl );
   }
 
+  retieveAuxiliares() {
+    const xUrl = this.API_URL + '/auxiliares' ;
+    return this.http.get( xUrl );
+  }
+
   retieveCenCosto( pBodega: string ) {
     const xUrl = this.API_URL + '/centrodecosto' ;
     return this.http.post( xUrl, { bodega: pBodega } );
@@ -51,10 +56,20 @@ export class StockService {
     return this.http.post( xUrl, body );
   }
 
+  grabarGuiaDeTraslado( enca, deta ) {
+    const xUrl = this.API_URL + '/grabarGuiaDeTraslado' ;
+    const body = { enca: JSON.stringify(enca), deta: JSON.stringify(deta) };
+    return this.http.post( xUrl, body );
+  }
+
   getFolio( pTipo:string, pConcepto: string, pBodega: string ) {
     const xUrl = this.API_URL + '/proximoFolio' ;
     const body = { tipo: pTipo, concepto: pConcepto, bodega: pBodega };
     return this.http.post( xUrl, body );
   }
 
+  retrieveTraslado( pBodega: string, ptipo: string, pfolio: number, pNroInterno: number ) {
+    const xUrl = this.API_URL + '/rescatarTraslado' ;
+    return this.http.post( xUrl, { bodega: pBodega } );
+  }
 }

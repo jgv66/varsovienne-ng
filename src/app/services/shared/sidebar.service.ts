@@ -10,9 +10,9 @@ export class SidebarService {
       titulo: 'Informes',
       icono: 'mdi mdi-cloud-print-outline',
       submenu: [
-        { titulo: 'Stock por Locales', url: '/stock' },
-        { titulo: 'Stock por Producto', url: '/stockP' },
-        // { titulo: 'Informe de Guías', url: '/iguias' },
+        { titulo: 'Stock por Locales',  url: '/stock'   },
+        { titulo: 'Stock por Producto', url: '/stockP'  },
+        { titulo: 'Guías de Consumo',   url: '/iguiasc' },
       ]
     }
   ];
@@ -23,7 +23,8 @@ export class SidebarService {
       icono: 'mdi mdi-cube-send',
       submenu: [
         { titulo: 'Consumo Interno',        url: '/guiasci' },
-        { titulo: 'Traslado entre Locales', url: '/guias' },
+        { titulo: 'Traslado entre Locales', url: '/guiastr' },
+        { titulo: 'Recepción de Traslados', url: '/guiasrecep' },
         { titulo: 'Gráficas',               url: '/graficas1' },
         // { titulo: 'Promesas',          url: '/promesas' },
         // { titulo: 'RxJs',              url: '/rxjs' },

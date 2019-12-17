@@ -10,6 +10,7 @@ export class LoginService {
   API_URL: string;
   usuario: any;
   localesPermitidos: [];
+  todoLocal: [];
 
   constructor(private http: HttpClient) {
     this.API_URL = environment.API_URL;
@@ -32,8 +33,26 @@ export class LoginService {
           (data: any) => {
               try {
                 this.localesPermitidos = ( data.datos.length > 0 ) ? data.datos : [];
+                // console.log('permitidos', this.localesPermitidos);
+                this.todosLosLocales();
               } catch (error) {
                 this.localesPermitidos = [];
+              }
+          },
+          err  => console.log( 'Err', err )
+        );
+  }
+
+  todosLosLocales() {
+    const xUrl = this.API_URL + '/locales' ;
+    this.http.post( xUrl, { id: this.usuario.id }  )
+        .subscribe(
+          (data: any) => {
+              try {
+                this.todoLocal = ( data.datos.length > 0 ) ? data.datos : [];
+                // console.log('todos', this.todoLocal);
+              } catch (error) {
+                this.todoLocal = [];
               }
           },
           err  => console.log( 'Err', err )

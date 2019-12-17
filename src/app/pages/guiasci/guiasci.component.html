@@ -1,7 +1,7 @@
 <form (ngSubmit)="ValidarConsumo()">
     <div class="form-row">
         <div class="col-8">
-            <label class="col-3 col-form-label">Bodega :</label>
+            <label class="col-3 col-form-label">Bodega</label>
             <select class="form-control col-9 text-left" name="enca.bodega" [(ngModel)]="enca.bodega" (ngModelChange)="rescataCC($event)">
                 <option value="">Bodega o Local Origen del Consumo</option>
                 <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
@@ -23,7 +23,7 @@
 
     <div class="form-row" style="margin-top: 10px;">
         <div class="col-8">
-            <label class="col-3 col-form-label">Causal :</label>
+            <label class="col-3 col-form-label">Causal</label>
             <select class="form-control col-9" name="enca.causal" [(ngModel)]="enca.causal">
                 <option value="">Causal del Consumo</option>
                 <option *ngFor="let causa of causales" [value]="causa.descripcion">{{ causa.descripcion }}</option>
@@ -33,14 +33,14 @@
 
     <div class="form-row" style="margin-top: 10px;">
         <div class="col-8">
-            <label class="col-3 col-form-label">Fecha :</label>
+            <label class="col-3 col-form-label">Fecha</label>
             <input class="form-control col-9" style="max-width: 200px ;" type="date" name="enca.fecha" [(ngModel)]="enca.fecha" placeholder="Fecha desde">
         </div>
     </div>
 
     <div class="form-row" style="margin-top: 10px;">
         <div class="col-8">
-            <label class="col-3 col-form-label">Glosa :</label>
+            <label class="col-3 col-form-label">Glosa</label>
             <input class="form-control col-9" type="text" name="enca.glosa" [(ngModel)]="enca.glosa" placeholder="Glosa del documento">
         </div>
         <div class="col-4" *ngIf="deta.length > 0 ">
