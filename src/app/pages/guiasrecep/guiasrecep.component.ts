@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
 
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2';
+
 interface Documento {
+  id: number;
   tipo: string;
   bodega: string;
   destino: string;
@@ -25,12 +29,17 @@ interface Documento {
   bruto: number;
 }
 interface Detalle {
+  id: number;
+  id_padre: number;
   codigo: string;
   descripcion: string;
   unidadMed: string;
-  cantidad: string;
+  cantidad: number;
+  cant_original: number;
   netoUnitario: number;
   subTotal: number;
+  estado: number;
+  aceptado: boolean;
 }
 
 @Component({
@@ -39,12 +48,12 @@ interface Detalle {
   styles: []
 })
 export class GuiasrecepComponent implements OnInit {
-
+  //
   folio: number;
   nrointerno: number;
   destino: string;
   //
-  causales = [];
+  todosAceptados = false;
   cargando = false;
   leyendo = false;
   totalItemes = 0;
@@ -58,12 +67,15 @@ export class GuiasrecepComponent implements OnInit {
                private stockSS: StockService) { }
 
   ngOnInit() {
+    this.bodegas = this.login.localesPermitidos;
     this.inicializar();
   }
 
   inicializar() {
+    this.todosAceptados = false;
     this.deta = [];
-    this.enca = { tipo: 'E',
+    this.enca = { id: 0,
+                  tipo: 'E',
                   bodega: '',
                   destino: '',
                   auxiliar: '',
@@ -88,48 +100,75 @@ export class GuiasrecepComponent implements OnInit {
 
   ValidarRecepcion() {
     //
-    console.log(this.folio);
-    console.log(this.nrointerno);
-    //
     this.leyendo = true;
     //
     this.stockSS.retrieveTraslado( this.destino, 'S', this.folio, this.nrointerno )
         .subscribe( (resultado: any) => {
           //
-          console.log('resultado ', resultado.datos );
+          const reg = resultado.datos[0];
+          this.enca = reg;
+          //
+          this.detalleTraslado();
+          //
+        });
+  }
+  detalleTraslado() {
+    this.stockSS.retrieveDetalle( this.enca.id )
+        .subscribe( (resultado: any) => {
+          //
+          this.deta = resultado.datos;
+          this.leyendo = false;
+          this.recalculaTotal();
           //
         });
   }
 
-  actualizarItemes( event ) {
-    // console.log(event);
-    this.deta.push( { codigo: event.CodProd,
-                      descripcion: event.DesProd,
-                      unidadMed: event.unidadMed,
-                      cantidad: event.cantidad,
-                      netoUnitario: event.netoUnitario,
-                      subTotal: Math.round( event.cantidad * event.netoUnitario )
-                    }
-                  );
+  aceptarItem( det ) {
+    det.aceptado = true;
+    det.subTotal = Math.round( det.cantidad * det.netoUnitario );
     this.recalculaTotal();
   }
-
-  quitarCodigo( det: any ) {
-    let index = 0;
-    this.deta.forEach(element => {
-      if ( element.codigo === det.codigo ) {
-        this.deta.splice(index, 1);
-        this.recalculaTotal();
-        return;
+  restituirItem( det ) {
+    det.cantidad = det.cant_original;
+  }
+  modificarItem( det ) {
+    det.estado = 2;
+  }
+  eliminarItem( det: any ) {
+    //
+    Swal.fire({
+      title: 'Está seguro?',
+      text: 'El ítem será eliminado de la lista!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórrelo!'
+    }).then((result) => {
+      if (result.value) {
+        let index = 0;
+        this.deta.forEach(element => {
+          if ( element.codigo === det.codigo ) {
+            this.deta.splice(index, 1);
+            this.recalculaTotal();
+          }
+          index += 1;
+        });
+        Swal.fire(
+          'Borrado!',
+          'El ítem fue eliminado de la lista.',
+          'success'
+        );
       }
-      index += 1;
     });
   }
 
   recalculaTotal() {
+    let aceptados = 0;
     this.totalItemes = 0;
     this.deta.forEach(element => {
       this.totalItemes += element.subTotal;
+      aceptados += (element.aceptado)
     });
   }
 

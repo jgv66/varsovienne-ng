@@ -68,8 +68,14 @@ export class StockService {
     return this.http.post( xUrl, body );
   }
 
-  retrieveTraslado( pBodega: string, ptipo: string, pfolio: number, pNroInterno: number ) {
+  retrieveTraslado( pDestino: string, ptipo: string, pfolio: number, pNroInterno: number ) {
     const xUrl = this.API_URL + '/rescatarTraslado' ;
-    return this.http.post( xUrl, { bodega: pBodega } );
+    return this.http.post( xUrl, { destino: pDestino, tipo: ptipo, folio: pfolio, nrointerno: pNroInterno } );
   }
+
+  retrieveDetalle( pId: number ) {
+    const xUrl = this.API_URL + '/rescatarDetalle' ;
+    return this.http.post( xUrl, { id: pId } );
+  }
+
 }
