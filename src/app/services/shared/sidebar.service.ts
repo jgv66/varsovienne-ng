@@ -25,7 +25,7 @@ export class SidebarService {
         { titulo: 'Consumo Interno',        url: '/guiasci' },
         { titulo: 'Traslado entre Locales', url: '/guiastr' },
         { titulo: 'Recepción de Traslados', url: '/guiasrecep' },
-        { titulo: 'Gráficas',               url: '/graficas1' },
+        // { titulo: 'Gráficas',               url: '/graficas1' },
         // { titulo: 'Promesas',          url: '/promesas' },
         // { titulo: 'RxJs',              url: '/rxjs' },
       ]

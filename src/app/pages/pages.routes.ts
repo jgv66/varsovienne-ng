@@ -32,7 +32,6 @@ const pagesRoutes: Routes = [
             { path: 'account-settings',  component: AccountSettingsComponent , data: { titulo: 'Ajustes del Tema' } },
             { path: 'promesas',          component: PromesasComponent        , data: { titulo: 'Promesas' } },
             { path: 'rxjs',              component: RxjsComponent            , data: { titulo: 'RxJs' } },
-            { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
         ]
     },
 ];

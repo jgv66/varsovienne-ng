@@ -139,7 +139,7 @@ export class GuiasComponent implements OnInit {
                         icon: 'success',
                         title: 'FOLIO: ' + data.datos[0].folio,
                         text: 'Guía de Traslado fue grabada con éxito',
-                        footer: '<a href>Nro.Interno Softlland: ' + data.datos[0].nroint + ' </a>'
+                        footer: '<a href>Nro.Interno Softland: ' + data.datos[0].nroint + ' </a>'
                       });
                       this.inicializar();
                     } else {

@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class LoginService {
 
   API_URL: string;
-  usuario: any;
+  usuario = undefined;
   localesPermitidos: [];
   todoLocal: [];
 

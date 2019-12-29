@@ -62,7 +62,7 @@ export class StockService {
     return this.http.post( xUrl, body );
   }
 
-  getFolio( pTipo:string, pConcepto: string, pBodega: string ) {
+  getFolio( pTipo: string, pConcepto: string, pBodega: string ) {
     const xUrl = this.API_URL + '/proximoFolio' ;
     const body = { tipo: pTipo, concepto: pConcepto, bodega: pBodega };
     return this.http.post( xUrl, body );
@@ -76,6 +76,12 @@ export class StockService {
   retrieveDetalle( pId: number ) {
     const xUrl = this.API_URL + '/rescatarDetalle' ;
     return this.http.post( xUrl, { id: pId } );
+  }
+
+  grabarGuiaDeRecepcion( enca, deta ) {
+    const xUrl = this.API_URL + '/grabarGuiaDeRecepcion' ;
+    const body = { enca: JSON.stringify(enca), deta: JSON.stringify(deta) };
+    return this.http.post( xUrl, body );
   }
 
 }

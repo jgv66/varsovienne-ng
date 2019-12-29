@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
+import { Router } from '@angular/router';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
@@ -13,6 +14,7 @@ interface Documento {
   auxiliar: string;
   numero: number;
   folio: string;   // trabajo con string pero se grama como numero
+  id_origen: number;
   codigoSII: number;
   electronico: boolean;
   tipoServSII: number;  // consumo interno = 3
@@ -31,6 +33,7 @@ interface Documento {
 interface Detalle {
   id: number;
   id_padre: number;
+  id_origen: number;
   codigo: string;
   descripcion: string;
   unidadMed: string;
@@ -55,6 +58,7 @@ export class GuiasrecepComponent implements OnInit {
   //
   todosAceptados = false;
   cargando = false;
+  grabando = false;
   leyendo = false;
   totalItemes = 0;
   bodegas: any;
@@ -64,9 +68,13 @@ export class GuiasrecepComponent implements OnInit {
   enca: Documento;
 
   constructor( private login: LoginService,
+               private router: Router,
                private stockSS: StockService) { }
 
   ngOnInit() {
+    if ( !this.login.usuario ) {
+      this.router.navigate(['/login']);
+    }
     this.bodegas = this.login.localesPermitidos;
     this.inicializar();
   }
@@ -81,13 +89,14 @@ export class GuiasrecepComponent implements OnInit {
                   auxiliar: '',
                   numero: undefined,
                   folio: undefined,   // trabajo con string pero se grama como numero
+                  id_origen: undefined,
                   codigoSII: 0,
                   electronico: false,
                   tipoServSII: 0,  // consumo interno = 3
                   concepto: '03',
-                  descConcepto: 'Traslado entre bodegas',
+                  descConcepto: 'Recepción de Traslado',
                   fecha: new Date(),
-                  glosa: 'Traslado entre bodegas',
+                  glosa: 'Recepción de Traslado',
                   ccosto: undefined,
                   descCCosto: '',
                   usuario: this.login.usuario.id,
@@ -98,17 +107,39 @@ export class GuiasrecepComponent implements OnInit {
     this.recalculaTotal();
   }
 
-  ValidarRecepcion() {
+  validarRecepcion() {
     //
+    let swap = '';
     this.leyendo = true;
     //
     this.stockSS.retrieveTraslado( this.destino, 'S', this.folio, this.nrointerno )
         .subscribe( (resultado: any) => {
           //
-          const reg = resultado.datos[0];
-          this.enca = reg;
-          //
-          this.detalleTraslado();
+          // console.log(resultado);
+          if ( resultado.resultado === 'ok' ) {
+            //
+            this.enca           = resultado.datos[0];
+            this.enca.id_origen = this.enca.id;
+            this.enca.tipo      = 'E';
+            this.enca.concepto  = '03';
+            this.enca.fecha     = new Date();
+            //
+            swap                = this.enca.bodega;
+            this.enca.bodega    = this.enca.destino;
+            this.enca.destino   = swap;
+            //
+            this.detalleTraslado();
+            //
+          } else {
+            //
+            this.leyendo = false;
+            Swal.fire(
+              'ATENCION',
+              'La recepción indicada no existe o ya fue recepcionada. Corrija y reintente.',
+              'error'
+            );
+            //
+          }
           //
         });
   }
@@ -118,11 +149,17 @@ export class GuiasrecepComponent implements OnInit {
           //
           this.deta = resultado.datos;
           this.leyendo = false;
+          this.rescataCC( this.destino );
           this.recalculaTotal();
           //
         });
   }
 
+  cambiaAcepta() {
+    this.deta.forEach(element => {
+        element.aceptado = true;
+    });
+  }
   aceptarItem( det ) {
     det.aceptado = true;
     det.subTotal = Math.round( det.cantidad * det.netoUnitario );
@@ -163,13 +200,83 @@ export class GuiasrecepComponent implements OnInit {
     });
   }
 
+  rescataCC( pBodega ) {
+    this.stockSS.retieveCenCosto( pBodega )
+        .subscribe( (data: any) => {
+          this.enca.ccosto     = data.datos[0].CodiCC;
+          this.enca.descCCosto = data.datos[0].DescCC;
+          this.enca.vendedor   = data.datos[0].VenCod;
+        });
+  }
   recalculaTotal() {
-    let aceptados = 0;
     this.totalItemes = 0;
     this.deta.forEach(element => {
       this.totalItemes += element.subTotal;
-      aceptados += (element.aceptado)
     });
   }
 
+  grabarRecepcion() {
+    this.todosAceptados = true;
+    this.deta.forEach(element => {
+      if ( !element.aceptado ) {
+        this.todosAceptados = false;
+      }
+      // relaciona al registro origen
+      element.id_origen = element.id;
+    });
+    if ( this.todosAceptados ) {
+      //
+      this.grabando = true;
+      this.stockSS.getFolio( this.enca.tipo, this.enca.concepto, this.enca.bodega )
+          .subscribe( (folio: any) => {
+            //
+            try {
+              //
+              this.enca.folio  = folio.datos[0].Folio  + 1;
+              this.enca.numero = folio.datos[0].NroInt + 1;
+              //
+              this.stockSS.grabarGuiaDeRecepcion( this.enca, this.deta )
+                  .subscribe( (data: any) => {
+                      //
+                      console.log('RESPUESTA -> ', data);
+                      //
+                      this.grabando = false;
+                      if ( data.resultado === 'ok' ) {
+                        Swal.fire({
+                          icon: 'success',
+                          title: 'FOLIO: ' + data.datos[0].folio,
+                          text: 'Guía de Recepción fue grabada con éxito',
+                          footer: '<a href>Nro.Interno Softland: ' + data.datos[0].nroint + ' </a>'
+                        });
+                        this.inicializar();
+                      } else {
+                        this.grabando = false;
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Cuidado...',
+                          text: 'La Guía de Recepción no fue grabada!',
+                          footer: '<a href>' + data.datos + '</a>'
+                        });
+                      }
+                  });
+            } catch (error) {
+                this.grabando = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cuidado...',
+                  text: 'La Guía de Recepción no fue grabada',
+                  footer: '<a href>' + error + '</a>'
+                });
+            }
+            //
+          });
+          //
+    } else {
+      Swal.fire(
+        'ATENCION',
+        'Todos los ítemes deben estar aceptados para intentar la grabación.',
+        'error'
+      );
+  }
+  }
 }

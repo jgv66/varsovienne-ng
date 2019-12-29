@@ -1,5 +1,5 @@
 <div class="card bg-warning" style="margin-top: 15px; margin-bottom: 5px; height: 110px;">
-    <form (ngSubmit)="ValidarRecepcion()">
+    <form (ngSubmit)="validarRecepcion()">
         <div class="form-row" style="margin-top: 5px;">
             <div class="col-10" style="margin-top: 7px;">
                 <label class="col-2 col-form-label">Local que recepciona</label>
@@ -15,7 +15,7 @@
                 <input name="folio" [(ngModel)]="folio" type="number" class="form-control col-7" placeholder="Folio del traslado?" aria-label="folio" aria-describedby="basic-addon1">
             </div>
             <div class="col-5">
-                <label class="col-3 col-form-label text-right">Número Interno</label>
+                <label class="col-3 col-form-label text-right" style="padding-left: 2px;">Número Interno</label>
                 <input name="nrointerno" [(ngModel)]="nrointerno" type="number" class="form-control col-7" placeholder="Nro.Interno del traslado?" aria-label="nrointerno" aria-describedby="basic-addon1">
             </div>
             <div class="offset-md-1 col-2">
@@ -24,7 +24,9 @@
         </div>
     </form>
 </div>
+
 <mat-progress-bar *ngIf=" leyendo " mode="indeterminate"></mat-progress-bar>
+
 
 <div class="form-row" style="margin-top: 20px;">
     <div class="col-10">
@@ -49,69 +51,71 @@
 <div class="form-row" style="margin-top: 10px;">
     <div class="col-10">
         <label class="col-2 col-form-label">Glosa</label>
-        <input class="form-control col-9" type="text" [value]="enca.glosa" disabled>
+        <input class="form-control col-9" type="text" [value]="enca.glosa" name="enca.glosa" [(ngModel)]="enca.glosa">
     </div>
-    <div class="col-2" *ngIf="deta.length > 0 && todosAceptados === true ">
-        <button class="btn btn-primary btn-block" type="button">Validar y Grabar recepción</button>
+    <div class="col-2" *ngIf="deta.length > 0">
+        <button class="btn btn-primary btn-block" type="button" (click)="grabarRecepcion()">Validar y Grabar recepción</button>
     </div>
-
 </div>
 
+<mat-progress-bar *ngIf=" grabando " mode="indeterminate"></mat-progress-bar>
+
 <div classs="card" style="margin-top: 20px;">
-    <table class="table table-striped table-bordered table-condensed">
+    <table class="table table-bordered">
         <thead class="bg-dark text-light">
             <tr translate="no">
-                <th scope="col">Código</th>
+                <th scope="col">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="chk" (change)="cambiaAcepta()">
+                        <label class="mb-0" for="chk{{i}}">Código</label>
+                    </div>
+                </th>
                 <th scope="col">Descripción</th>
                 <th scope="col">Cantidad</th>
+                <th scope="col" style="max-width: 36px;"> </th>
                 <th scope="col">UM</th>
                 <th scope="col" class="text-right">Precio</th>
                 <th scope="col" class="text-right">Sub-Total</th>
                 <th scope="col" class="text-center"></th>
                 <th scope="col" class="text-center"></th>
-                <th scope="col" class="text-center"></th>
             </tr>
         </thead>
         <tbody translate="no" class="text-dark">
-            <tr *ngFor="let det of deta; let i = index;">
+            <tr *ngFor="let det of deta; let i = index;" [ngClass]=" det.aceptado ? 'bg-amarillo-claro' : 'bg-ligth' ">
                 <td style="padding-top: 18px;" scope="row">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" id="chk{{i}}">
+                        <input type="checkbox" id="chk{{i}}" name="det.aceptado" [(ngModel)]="det.aceptado" (change)="aceptarItem( det )">
                         <label for="chk{{i}}">{{det.codigo}}</label>
                     </div>
                 </td>
                 <td style="padding-top: 18px;">{{det.descripcion}}</td>
                 <!--  -->
-                <td *ngIf=" det.estado !== 2 " style="padding-top: 18px;">{{det.cantidad | number:"1.0-3"}}</td>
+                <td *ngIf=" det.estado !== 2 " style="padding-top: 18px; text-align: right;">
+                    {{det.cantidad | number:"1.0-3"}}
+                </td>
                 <td *ngIf=" det.estado === 2 " class="text-left">
                     <input type="number" name="det.cantidad" [(ngModel)]="det.cantidad" min="0" class="form-control" style="max-width: 100px;">
+                </td>
+                <td style="padding-top: 18px; text-align: left;">
+                    <button type="button" class="btn btn-link " (click)="modificarItem( det )" style="padding-top: 2px;">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
                 </td>
                 <!--  -->
                 <td style="padding-top: 18px;">{{det.unidadMed}}</td>
                 <td style="padding-top: 18px;" class="text-right">{{det.netoUnitario | number:"1.0-0"}}</td>
                 <td style="padding-top: 18px;" class="text-right">{{det.subTotal | number:"1.0-0"}}</td>
                 <td class="text-center">
-                    <button *ngIf="det.estado !== 1 " type="button" class="btn btn-primary" (click)="aceptarItem( det )">Aceptar ítem</button>
-                    <button *ngIf="det.estado === 1 " type="button" class="btn btn-success" (click)="aceptarItem( det )">Aceptado !!</button>
-                </td>
-                <td class="text-center">
-                    <!-- Modal -->
-                    <button type="button" class="btn btn-primary" (click)="modificarItem( det )">
-                        Modificar 
-                        <i class="material-icon" >delete</i>
-                    </button>
-                    <!-- fin modal  -->
-                </td>
-                <td class="text-center">
-                    <!-- Modal -->
-                    <button type="button" class="btn btn-primary" (click)="eliminarItem( det )">
-                        Eliminar
+                    <button type="button" class="btn btn-link" (click)="eliminarItem( det )">
+                        <!-- <i class="material-icon" >delete</i> -->
+                        <i class="far fa-trash-alt"></i>
                     </button>
                 </td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
