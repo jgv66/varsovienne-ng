@@ -62,7 +62,7 @@ export class IguiascComponent implements OnInit {
       this.stockSS.retrieveGuias( this.bodega, this.tipoDoc, this.fechaini, this.fechafin )
         .subscribe( (data: any) => {
             this.cargando = false;
-            // 
+            //
             if ( data.resultado === 'ok' ) {
               this.guias = data.datos;
             } else {
