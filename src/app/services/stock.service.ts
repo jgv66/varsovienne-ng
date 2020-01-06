@@ -35,6 +35,12 @@ export class StockService {
     return this.http.post( xUrl, { codigo: code } );
   }
 
+  retrieveGuias( local: string, tipoDoc: string, fechaIni: Deta, fechaFin: Date ) {
+    const xUrl = this.API_URL + '/leerGuias' ;
+    const body = { local, tipoDoc, fechaIni, fechaFin };
+    return this.http.post( xUrl, body );
+  }
+
   retieveCausales() {
     const xUrl = this.API_URL + '/causalesConsumo' ;
     return this.http.get( xUrl );
@@ -59,6 +65,11 @@ export class StockService {
   grabarGuiaDeTraslado( enca, deta ) {
     const xUrl = this.API_URL + '/grabarGuiaDeTraslado' ;
     const body = { enca: JSON.stringify(enca), deta: JSON.stringify(deta) };
+    return this.http.post( xUrl, body );
+  }
+  G2Print( nroint, folio ) {
+    const xUrl = this.API_URL + '/G2Print' ;
+    const body = { nrointerno: nroint, folio };
     return this.http.post( xUrl, body );
   }
 

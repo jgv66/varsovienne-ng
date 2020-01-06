@@ -16,6 +16,7 @@ import { MaterialModule } from './material.module';
 
 // servicios
 import { ServiceModule } from './services/service.module';
+import { FileSaverModule } from 'ngx-filesaver';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -39,7 +40,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     BsDatepickerModule.forRoot(),
     ServiceModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    FileSaverModule
   ],
   providers: [],
   bootstrap: [AppComponent]

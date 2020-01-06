@@ -12,7 +12,7 @@ export class SidebarService {
       submenu: [
         { titulo: 'Stock por Locales',  url: '/stock'   },
         { titulo: 'Stock por Producto', url: '/stockP'  },
-        { titulo: 'Guías de Consumo',   url: '/iguiasc' },
+        { titulo: 'Guías',              url: '/iguiasc' },
       ]
     }
   ];

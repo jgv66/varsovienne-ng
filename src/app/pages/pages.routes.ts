@@ -26,7 +26,7 @@ const pagesRoutes: Routes = [
             { path: 'guiasrecep',        component: GuiasrecepComponent      , data: { titulo: 'Guía de Recepción de Traslado' } },
             { path: 'stock',             component: StockComponent           , data: { titulo: 'Stock por Locales' } },
             { path: 'stockP',            component: StockpComponent          , data: { titulo: 'Stock por Producto' } },
-            { path: 'iguiasc',           component: IguiascComponent         , data: { titulo: 'Informe de Guias de Consumo' } },
+            { path: 'iguiasc',           component: IguiascComponent         , data: { titulo: 'Informe de Guías' } },
             { path: 'progress',          component: ProgressComponent        , data: { titulo: 'Progress Bar' } },
             { path: 'graficas1',         component: Graficas1Component       , data: { titulo: 'Gráficos' } },
             { path: 'account-settings',  component: AccountSettingsComponent , data: { titulo: 'Ajustes del Tema' } },

@@ -55,6 +55,7 @@ export class GuiasrecepComponent implements OnInit {
   folio: number;
   nrointerno: number;
   destino: string;
+  i: number;
   //
   todosAceptados = false;
   cargando = false;

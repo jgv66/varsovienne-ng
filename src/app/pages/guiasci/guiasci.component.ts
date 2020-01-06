@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
+import { Router } from '@angular/router';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
@@ -51,10 +52,14 @@ export class GuiasciComponent implements OnInit {
   enca: Documento;
 
   constructor( private login: LoginService,
+               private router: Router,
                private stockSS: StockService ) {
   }
 
   ngOnInit() {
+    if ( !this.login.usuario ) {
+      this.router.navigate(['/login']);
+    }
     // console.log(this.login.usuario);
     this.bodegas = this.login.localesPermitidos;
     // console.log(this.bodegas);

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
+import { FileSaverService } from 'ngx-filesaver';
+import { map } from 'rxjs/operators';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
@@ -54,10 +57,15 @@ export class GuiasComponent implements OnInit {
   enca: Documento;
 
   constructor( private login: LoginService,
-               private stockSS: StockService ) {
+               private router: Router,
+               private stockSS: StockService,
+               private file: FileSaverService ) {
   }
 
   ngOnInit() {
+    if ( !this.login.usuario ) {
+      this.router.navigate(['/login']);
+    }
     // console.log(this.login.usuario);
     this.bodegas  = this.login.localesPermitidos;
     this.destinos = this.login.todoLocal;
@@ -135,6 +143,7 @@ export class GuiasComponent implements OnInit {
                     //
                     this.grabando = false;
                     if ( data.resultado === 'ok' ) {
+                      this.descargaArchivo( data.datos[0].nroint, data.datos[0].folio );
                       Swal.fire({
                         icon: 'success',
                         title: 'FOLIO: ' + data.datos[0].folio,
@@ -154,6 +163,30 @@ export class GuiasComponent implements OnInit {
           });
           //
       }
+  }
+  descargaArchivo( nroint: number, folio: number ) {
+    //
+    /*  http://www.dcmembers.com/skrommel/download/moveout/   */
+    //
+    let lista = '';
+    const fileName =  'GDV-' + folio.toString() + '-' + nroint.toString() + '.txt';
+    //
+    this.stockSS.G2Print( nroint, folio )
+        .pipe(
+          map( (data: any) => {
+            //
+            for (const fila of data.datos) {
+              lista += fila.dato + '\n';
+            }
+            return lista;
+            //
+          })
+        )
+        .subscribe( (data: any) => {
+            //
+            this.file.saveText( data, fileName );
+            //
+        });
   }
 
   actualizarItemes( event ) {
