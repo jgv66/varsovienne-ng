@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
+import { map } from 'rxjs/operators';
 
 // ES6 Modules or TypeScript
 import Swal from 'sweetalert2';
+// import * as printJS from 'print-js';
 
 @Component({
   selector: 'app-iguiasc',
@@ -75,6 +77,13 @@ export class IguiascComponent implements OnInit {
 
   imprimir( data ) {
     console.log(data);
+    this.stockSS.imprimirGuia( data.tipo, data.folio, data.nroint )
+      .pipe( map( (resp: any) => resp.datos ) )
+      .subscribe( (pdf: any) => {
+          console.log('volví->', this.stockSS.API_URL + '/pdf/' + pdf );
+          window.open( this.stockSS.API_URL + '/pdf/' + pdf );
+          // printJS( this.stockSS.API_URL + '/pdf/' + pdf );
+      });
   }
 
 }

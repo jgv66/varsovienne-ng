@@ -1,8 +1,6 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { ClassField } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +33,15 @@ export class StockService {
     return this.http.post( xUrl, { codigo: code } );
   }
 
-  retrieveGuias( local: string, tipoDoc: string, fechaIni: Deta, fechaFin: Date ) {
+  retrieveGuias( local: string, tipoDoc: string, fechaIni: Date, fechaFin: Date ) {
     const xUrl = this.API_URL + '/leerGuias' ;
     const body = { local, tipoDoc, fechaIni, fechaFin };
+    return this.http.post( xUrl, body );
+  }
+
+  imprimirGuia( tipo, folio, nroint ) {
+    const xUrl = this.API_URL + '/imprimirGuia' ;
+    const body = { tipo, folio, nroint };
     return this.http.post( xUrl, body );
   }
 
