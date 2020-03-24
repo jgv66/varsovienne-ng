@@ -91,9 +91,9 @@ export class GuiasrecepComponent implements OnInit {
                   numero: undefined,
                   folio: undefined,   // trabajo con string pero se grama como numero
                   id_origen: undefined,
-                  codigoSII: 0,
+                  codigoSII: 50,
                   electronico: false,
-                  tipoServSII: 0,  // consumo interno = 3
+                  tipoServSII: 3,  // consumo interno = 3
                   concepto: '03',
                   descConcepto: 'Recepción de Traslado',
                   fecha: new Date(),
@@ -129,6 +129,9 @@ export class GuiasrecepComponent implements OnInit {
             this.enca.bodega    = this.enca.destino;
             this.enca.destino   = swap;
             //
+            this.enca.electronico = false;
+            this.enca.codigoSII   = 50;
+            //
             this.detalleTraslado();
             //
           } else {
@@ -153,6 +156,14 @@ export class GuiasrecepComponent implements OnInit {
           this.rescataCC( this.destino );
           this.recalculaTotal();
           //
+        });
+  }
+  rescataCC( pBodega ) {
+    this.stockSS.retieveCenCosto( pBodega )
+        .subscribe( (data: any) => {
+          this.enca.ccosto     = data.datos[0].CodiCC;
+          // this.enca.descCCosto = data.datos[0].DescCC;
+          this.enca.vendedor   = data.datos[0].VenCod;
         });
   }
 
@@ -201,14 +212,6 @@ export class GuiasrecepComponent implements OnInit {
     });
   }
 
-  rescataCC( pBodega ) {
-    this.stockSS.retieveCenCosto( pBodega )
-        .subscribe( (data: any) => {
-          this.enca.ccosto     = data.datos[0].CodiCC;
-          this.enca.descCCosto = data.datos[0].DescCC;
-          this.enca.vendedor   = data.datos[0].VenCod;
-        });
-  }
   recalculaTotal() {
     this.totalItemes = 0;
     this.deta.forEach(element => {
@@ -228,56 +231,42 @@ export class GuiasrecepComponent implements OnInit {
     if ( this.todosAceptados ) {
       //
       this.grabando = true;
-      this.stockSS.getFolio( this.enca.tipo, this.enca.concepto, this.enca.bodega )
-          .subscribe( (folio: any) => {
-            //
-            try {
+      this.enca.electronico = false;
+      this.enca.folio  = '';  // folio.datos[0].Folio  + 1;
+      this.enca.numero = 0 ; // folio.datos[0].NroInt + 1;
+      //
+      this.stockSS.grabarGuiaDeRecepcion( this.enca, this.deta )
+          .subscribe( (data: any) => {
               //
-              this.enca.folio  = folio.datos[0].Folio  + 1;
-              this.enca.numero = folio.datos[0].NroInt + 1;
+              // console.log('RESPUESTA -> ', data);
               //
-              this.stockSS.grabarGuiaDeRecepcion( this.enca, this.deta )
-                  .subscribe( (data: any) => {
-                      //
-                      console.log('RESPUESTA -> ', data);
-                      //
-                      this.grabando = false;
-                      if ( data.resultado === 'ok' ) {
-                        Swal.fire({
-                          icon: 'success',
-                          title: 'FOLIO: ' + data.datos[0].folio,
-                          text: 'Guía de Recepción fue grabada con éxito',
-                          footer: '<a href>Nro.Interno Softland: ' + data.datos[0].nroint + ' </a>'
-                        });
-                        this.inicializar();
-                      } else {
-                        this.grabando = false;
-                        Swal.fire({
-                          icon: 'error',
-                          title: 'Cuidado...',
-                          text: 'La Guía de Recepción no fue grabada!',
-                          footer: '<a href>' + data.datos + '</a>'
-                        });
-                      }
-                  });
-            } catch (error) {
+              this.grabando = false;
+              if ( data.resultado === 'ok' ) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'FOLIO: ' + data.datos[0].folio,
+                  text: 'Guía de Recepción fue grabada con éxito',
+                  footer: '<a href>Nro.Interno Softland: ' + data.datos[0].nroint + ' </a>'
+                });
+                this.inicializar();
+              } else {
                 this.grabando = false;
                 Swal.fire({
                   icon: 'error',
                   title: 'Cuidado...',
-                  text: 'La Guía de Recepción no fue grabada',
-                  footer: '<a href>' + error + '</a>'
+                  text: 'La Guía de Recepción no fue grabada!',
+                  footer: '<a href>' + data.datos + '</a>'
                 });
-            }
-            //
+              }
           });
-          //
+         //
     } else {
       Swal.fire(
         'ATENCION',
         'Todos los ítemes deben estar aceptados para intentar la grabación.',
         'error'
       );
+    }
   }
-  }
+
 }

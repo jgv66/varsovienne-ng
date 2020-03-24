@@ -17,10 +17,8 @@ export class SettingsService {
     // existe la variable?
     if ( localStorage.getItem( 'ajustes' ) ) {
       this.ajustes = JSON.parse( localStorage.getItem( 'ajustes' ) );
-      // console.log('cargando de ajustes');
       this.aplicarTema( this.ajustes.tema );
     } else {
-      // console.log('valores por default');
       this.aplicarTema( this.ajustes.tema );
     }
   }

@@ -24,7 +24,7 @@
                     <mat-progress-bar *ngIf=" cargando " mode="indeterminate"></mat-progress-bar>
 
                     <div class="col-xs-12">
-                        <button class="btn btn-info btn-lg btn-block text-uppercase btn-rounded" type="submit">Ingresar</button>
+                        <button class="btn btn-info btn-lg btn-block text-uppercase btn-rounded" type="submit" ng-mousedown="$event.preventDefault();">Ingresar</button>
                     </div>
                 </div>
             </form>

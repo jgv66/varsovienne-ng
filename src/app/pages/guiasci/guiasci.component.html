@@ -7,18 +7,6 @@
                 <option *ngFor="let bod of bodegas" [value]="bod.CodBode">{{ bod.DescCC }}</option>
             </select>
         </div>
-        <div class="col-4" style="margin-top:7px; padding-left: 10px;">
-            <label>Documento es Electrónico</label>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="enca.electronico" [(ngModel)]="enca.electronico" id="radioSI" [value]="true" disabled>
-                <label class="form-check-label" for="radioSI">Sí</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="enca.electronico" [(ngModel)]="enca.electronico" id="radioNO" [value]="false" disabled>
-                <label class="form-check-label" for="radioNO">No</label>
-            </div>
-
-        </div>
     </div>
 
     <div class="form-row" style="margin-top: 10px;">
@@ -26,7 +14,7 @@
             <label class="col-3 col-form-label">Causal</label>
             <select class="form-control col-9" name="enca.causal" [(ngModel)]="enca.causal">
                 <option value="">Causal del Consumo</option>
-                <option *ngFor="let causa of causales" [value]="causa.descripcion">{{ causa.descripcion }}</option>
+                <option *ngFor="let causa of login.causales" [value]="causa.descripcion">{{ causa.descripcion }}</option>
             </select>
         </div>
     </div>
@@ -44,7 +32,8 @@
             <input class="form-control col-9" type="text" name="enca.glosa" [(ngModel)]="enca.glosa" placeholder="Glosa del documento">
         </div>
         <div class="col-4" *ngIf="deta.length > 0 ">
-            <button class="btn btn-primary  btn-block" type="submit">Validar y Grabar el Consumo</button>
+            <button class="btn btn-primary  
+                    btn-block" type="submit" ng-click-options="{preventDoubleClick: true}">Validar y Grabar el Consumo</button>
         </div>
     </div>
 
@@ -73,8 +62,8 @@
                 <td style="padding-top: 18px;">{{det.descripcion}}</td>
                 <td style="padding-top: 18px;">{{det.cantidad | number:"1.0-3"}}</td>
                 <td style="padding-top: 18px;">{{det.unidadMed}}</td>
-                <td style="padding-top: 18px;" class="text-right">{{det.netoUnitario | number:"1.0-0"}}</td>
-                <td style="padding-top: 18px;" class="text-right">{{det.subTotal | number:"1.0-0"}}</td>
+                <td style="padding-top: 18px;" class="text-right">n/a</td>
+                <td style="padding-top: 18px;" class="text-right">n/a</td>
                 <td class="text-center">
                     <a (click)="quitarCodigo( det )" class="has-arrow waves-effect text-dark"><i class="mdi mdi-close-circle mdi-36px"></i></a>
                 </td>
@@ -87,7 +76,7 @@
                 <th></th>
                 <th></th>
                 <th class="text-right">Total</th>
-                <th class="text-right">{{ totalItemes | number:"1.0-0"}}</th>
+                <th class="text-right">n/a</th>
                 <th>&nbsp;</th>
             </tr>
             <tfoot>

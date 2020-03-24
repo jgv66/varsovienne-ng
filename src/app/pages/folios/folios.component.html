@@ -1,0 +1,80 @@
+<form (ngSubmit)="consultaFolios()">
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-8">
+            <label class="col-3 col-form-label">Local a buscar...</label>
+            <input class="form-control col-9" type="text" name="nombre" [(ngModel)]="nombre" placeholder="...">
+        </div>
+        <div class="col-2">
+            <button class="btn btn-primary btn-block" type="submit">Buscar</button>
+        </div>
+    </div>
+</form>
+
+<div class="progress" style="height: 8px;" *ngIf=" cargando ">
+    <div class="progress-bar progress-bar-striped  progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+
+<table class="table table-sm table-striped" style="margin-top: 10px; background-color:lightgray;margin-bottom:0px;">
+    <thead>
+        <tr translate="no">
+            <th scope="row" style="max-width: 100px;">Local</th>
+            <th>Folio actual</th>
+            <th>Folio inicial</th>
+            <th>Folio final</th>
+            <th>Modificar?</th>
+        </tr>
+    </thead>
+</table>
+<div style="overflow:scroll; height:660px;">
+    <table class="table table-sm table-striped" style="background-color:lightgray;">
+        <tbody translate="no">
+            <tr *ngFor="let folio of folios">
+                <td scope="row" style="max-width: 100px;">{{folio.local}}</td>
+                <td>{{folio.folio | number:"1.0-0"}}</td>
+                <td>{{folio.foliodesde | number:"1.0-0"}}</td>
+                <td>{{folio.foliohasta | number:"1.0-0"}}</td>
+                <td class="text-center">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-link" (click)="modificarFolio( folio )" data-toggle="modal" data-target="#exampleModalCentered">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCentered" tabindex="-2" role="dialog" aria-labelledby="exampleModalCenteredLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenteredLabel">Mantención de Folios : {{ local }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-row" style="margin-top: 10px;">
+                                        <div class="col-12">
+                                            <label class="col-4 col-form-label">Folio actual</label>
+                                            <input class="form-control col-6" type="number" name="actual" [(ngModel)]="actual">
+                                        </div>
+                                        <div class="col-12" style="margin-top: 10px;">
+                                            <label class="col-4 col-form-label">Folio inicial</label>
+                                            <input class="form-control col-6" type="number" name="desde" [(ngModel)]="desde">
+                                        </div>
+                                        <div class="col-12" style="margin-top: 10px;">
+                                            <label class="col-4 col-form-label">Folio final</label>
+                                            <input class="form-control col-6" type="number" name="hasta" [(ngModel)]="hasta">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="grabarFolio()">Grabar Cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- fin modal -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

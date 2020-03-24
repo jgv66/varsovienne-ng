@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 export class IguiascComponent implements OnInit {
 
   cargando = false;
+  girar = false;
   bodegas: any;
   bodega = '';
   guias = [];
@@ -47,18 +48,12 @@ export class IguiascComponent implements OnInit {
     //
     this.cargando = true;
     //
-    // const stringFechaDesde = document.getElementById('fechaini').value;
-    // const stringFechaHasta = document.getElementById('fechafin').value;
-    //
     if ( this.bodega === '' ) {
       this.cargando = false;
       Swal.fire('Bodega/Local no puede estar vacío');
     } else if ( this.tipoDoc === '' ) {
       this.cargando = false;
       Swal.fire('Tipo de documento no puede estar vacío');
-    // } else if ( stringFechaDesde === '' || stringFechaHasta === '' ) {
-    //   this.cargando = false;
-    //   Swal.fire('Fechas no pueden estar vacías');
     } else {
     //
       this.stockSS.retrieveGuias( this.bodega, this.tipoDoc, this.fechaini, this.fechafin )
@@ -76,14 +71,16 @@ export class IguiascComponent implements OnInit {
   }
 
   imprimir( data ) {
-    console.log(data);
+    data.spinn = true;
     this.stockSS.imprimirGuia( data.tipo, data.folio, data.nroint )
       .pipe( map( (resp: any) => resp.datos ) )
       .subscribe( (pdf: any) => {
-          console.log('volví->', this.stockSS.API_URL + '/pdf/' + pdf );
-          window.open( this.stockSS.API_URL + '/pdf/' + pdf );
-          // printJS( this.stockSS.API_URL + '/pdf/' + pdf );
+          setTimeout( () => {
+              data.spinn = false;
+              window.open( this.stockSS.API_URL + '/pdf/' + pdf );
+          }, 600);
       });
   }
 
 }
+

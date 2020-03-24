@@ -38,7 +38,8 @@
                         <input [disabled]=" ( det.netoUnitario <= 0 ) ? true : false " type="number" name="det.cantidad" [(ngModel)]="det.cantidad" min="0" class="form-control" style="max-width: 100px;">
                     </td>
                     <td style="padding-top: 18px;">{{det.unidadMed}}</td>
-                    <td class="text-right" style="padding-top: 18px;">{{det.netoUnitario | number:"1.0-0"}}</td>
+                    <!-- <td class="text-right" style="padding-top: 18px;">{{det.netoUnitario | number:"1.0-0"}}</td> -->
+                    <td class="text-right" style="padding-top: 18px;">n/a</td>
                     <td class="text-center">
                         <a (click)="trasladaDatos( det )" class="has-arrow waves-effect text-danger"><i class="mdi mdi-plus-circle-outline mdi-36px"></i></a>
                     </td>

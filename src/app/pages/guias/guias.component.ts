@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { StockService } from '../../services/stock.service';
 import { FileSaverService } from 'ngx-filesaver';
@@ -53,26 +53,46 @@ export class GuiasComponent implements OnInit {
   bodegas: any;
   destinos: any;
   auxiliares: any;
+  tipoGuia = '';
   deta: Array<Detalle> = [];
   enca: Documento;
 
   constructor( private login: LoginService,
                private router: Router,
                private stockSS: StockService,
-               private file: FileSaverService ) {
+               private file: FileSaverService,
+               private params: ActivatedRoute ) {
+    this.tipoGuia = this.params.snapshot.paramMap.get('dev');
   }
 
   ngOnInit() {
     if ( !this.login.usuario ) {
       this.router.navigate(['/login']);
     }
-    // console.log(this.login.usuario);
     this.bodegas  = this.login.localesPermitidos;
-    this.destinos = this.login.todoLocal;
-    // console.log(this.bodegas);
+    if ( this.login.usuario.supervisor === true ) {
+      this.destinos = this.login.todoLocal;
+    } else {
+      this.destinos = [];
+      for (const fila of this.login.todoLocal) {
+        if ( fila.CodBode === '9' ) {
+          this.destinos.push( fila );
+        }
+      }
+    }
+    //
     this.stockSS.retieveAuxiliares()
+        .pipe(
+            map( (data: any) => {
+              if ( this.login.usuario.supervisor === true ) {
+                return data;
+              } else {
+                return { datos: [ {CodAux: '81013400', NomAux: 'BOMBONES VARSOVIENNE S.A.'} ] };
+              }
+            })
+        )
         .subscribe( (data: any) => {
-          this.auxiliares = data.datos;
+            this.auxiliares = data.datos;
         });
     this.inicializar();
   }
@@ -86,7 +106,7 @@ export class GuiasComponent implements OnInit {
                   numero: undefined,
                   folio: undefined,   // trabajo con string pero se grama como numero
                   codigoSII: 0,
-                  electronico: false,
+                  electronico: true,
                   tipoServSII: 0,  // consumo interno = 3
                   concepto: '06',
                   descConcepto: 'Traslado entre locales',
@@ -128,40 +148,34 @@ export class GuiasComponent implements OnInit {
       Swal.fire('Fecha no puede estar vacía');
     } else {
       //
-      this.stockSS.getFolio( this.enca.tipo, this.enca.concepto, this.enca.bodega )
-          .subscribe( (folio: any) => {
-            //
-            // console.log('luego de solicitar FOLIOS ', folio);
-            //
-            this.enca.folio  = folio.datos[0].Folio  + 1;
-            this.enca.numero = folio.datos[0].NroInt + 1;
-            //
-            this.stockSS.grabarGuiaDeTraslado( this.enca, this.deta )
-                .subscribe( (data: any) => {
-                    //
-                    // console.log('RESPUESTA -> ', data);
-                    //
-                    this.grabando = false;
-                    if ( data.resultado === 'ok' ) {
-                      this.descargaArchivo( data.datos[0].nroint, data.datos[0].folio );
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'FOLIO: ' + data.datos[0].folio,
-                        text: 'Guía de Traslado fue grabada con éxito',
-                        footer: '<a href>Nro.Interno Softland: ' + data.datos[0].nroint + ' </a>'
-                      });
-                      this.inicializar();
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Cuidado...',
-                        text: 'La Guía de Traslado no fue grabada!',
-                        footer: '<a href>' + data.datos + '</a>'
-                      });
-                    }
+      this.enca.folio  = '';
+      this.enca.numero = 0;
+      //
+      this.stockSS.grabarGuiaDeTraslado( this.enca, this.deta )
+          .subscribe( (data: any) => {
+              //
+              this.grabando = false;
+              if ( data.resultado === 'ok' ) {
+                //
+                this.descargaArchivo( data.datos[0].nroint, data.datos[0].folio );
+                //
+                Swal.fire({
+                  icon: 'success',
+                  title: 'FOLIO: ' + data.datos[0].folio,
+                  text: 'Guía de Traslado fue grabada con éxito',
+                  footer: '<a href>Nro.Interno Softlland: ' + data.datos[0].nroint + ' </a>'
+                });                
+                //
+                this.inicializar();
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cuidado...',
+                  text: 'La Guía de Traslado no fue grabada!',
+                  footer: '<a href>' + data.datos + '</a>'
                 });
+              }
           });
-          //
       }
   }
   descargaArchivo( nroint: number, folio: number ) {
@@ -169,7 +183,7 @@ export class GuiasComponent implements OnInit {
     /*  http://www.dcmembers.com/skrommel/download/moveout/   */
     //
     let lista = '';
-    const fileName =  'GDV-' + folio.toString() + '-' + nroint.toString() + '.txt';
+    const fileName =  'GDV_' + folio.toString() + '-' + nroint.toString() + '.txt';
     //
     this.stockSS.G2Print( nroint, folio )
         .pipe(
@@ -214,12 +228,19 @@ export class GuiasComponent implements OnInit {
     });
   }
 
-  rescataCC( pBodega ) {
-    this.stockSS.retieveCenCosto( pBodega )
+  rescataCC() {
+    //
+    this.stockSS.retieveCenCosto( this.enca.bodega )
         .subscribe( (data: any) => {
-          this.enca.ccosto     = data.datos[0].CodiCC;
-          this.enca.descCCosto = data.datos[0].DescCC;
-          this.enca.vendedor   = data.datos[0].VenCod;
+          try {
+            this.enca.ccosto     = data.datos[0].CodiCC;
+            this.enca.descCCosto = data.datos[0].DescCC;
+            this.enca.vendedor   = data.datos[0].VenCod;
+          } catch (error) {
+            this.enca.ccosto     = undefined;
+            this.enca.descCCosto = '';
+            this.enca.vendedor   = undefined;
+          }
         });
   }
 

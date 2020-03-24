@@ -31,6 +31,8 @@ import { BuscarCodigosComponent } from '../components/buscar-codigos/buscar-codi
 import { EditalineaComponent } from '../components/editalinea/editalinea.component';
 import { IguiascComponent } from './iguiasc/iguiasc.component';
 import { GuiasrecepComponent } from './guiasrecep/guiasrecep.component';
+import { FoliosComponent } from './folios/folios.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
     declarations: [
@@ -51,7 +53,9 @@ import { GuiasrecepComponent } from './guiasrecep/guiasrecep.component';
         BuscarCodigosComponent,
         EditalineaComponent,
         IguiascComponent,
-        GuiasrecepComponent
+        GuiasrecepComponent,
+        FoliosComponent,
+        UsuariosComponent
     ],
     exports: [
         DashboardComponent,

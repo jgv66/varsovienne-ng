@@ -19,7 +19,7 @@
                 <input name="nrointerno" [(ngModel)]="nrointerno" type="number" class="form-control col-7" placeholder="Nro.Interno del traslado?" aria-label="nrointerno" aria-describedby="basic-addon1">
             </div>
             <div class="offset-md-1 col-2">
-                <button type="submit" class="btn btn-primary btn-block col-8">Buscar</button>
+                <button type="submit" ng-click-options="{preventDoubleClick: true}" class="btn btn-primary btn-block col-8">Buscar</button>
             </div>
         </div>
     </form>
@@ -27,38 +27,33 @@
 
 <mat-progress-bar *ngIf=" leyendo " mode="indeterminate"></mat-progress-bar>
 
+<form (ngSubmit)="grabarRecepcion()">
+    <div class="form-row" style="margin-top: 20px;">
+        <div class="col-10">
+            <label class="col-2 col-form-label">Origen del Traslado</label>
+            <select class="form-control col-9 text-left" value="enca.bodega" disabled>
+                <option value="">{{ enca.descCCosto }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-10">
+            <label class="col-2 col-form-label">Fecha</label>
+            <input class="form-control col-10" style="max-width: 200px ;" type="text" [value]="enca.fecha | date:'dd/MM/yyyy' " disabled>
+        </div>
+    </div>
+    <div class="form-row" style="margin-top: 10px;">
+        <div class="col-10">
+            <label class="col-2 col-form-label">Glosa</label>
+            <input class="form-control col-9" type="text" [value]="enca.glosa" name="enca.glosa" [(ngModel)]="enca.glosa">
+        </div>
+        <div class="col-2" *ngIf="deta.length > 0">
+            <button class="btn btn-primary btn-block" type="submit" ng-click-options="{preventDoubleClick: true}">Validar y Grabar recepción</button>
+        </div>
+    </div>
+</form>
 
-<div class="form-row" style="margin-top: 20px;">
-    <div class="col-10">
-        <label class="col-2 col-form-label">Origen del Traslado</label>
-        <select class="form-control col-9 text-left" value="enca.bodega" disabled>
-            <option value="">{{ enca.descCCosto }}</option>
-        </select>
-    </div>
-    <div class="col-2" style="margin-top: 0px; padding-left: 10px; height: 38px;">
-        <label *ngIf=" enca.electronico " class="alert alert-danger" role="alert" style="padding-top: 5px; padding-bottom: 5px;">Doc. Electrónico</label>
-        <label *ngIf=" !enca.electronico " class="alert alert-warning" role="alert" style="padding-top: 5px; padding-bottom: 5px;">Doc. NO Electrónico</label>
-    </div>
-</div>
-
-<div class="form-row" style="margin-top: 10px;">
-    <div class="col-10">
-        <label class="col-2 col-form-label">Fecha</label>
-        <input class="form-control col-10" style="max-width: 200px ;" type="text" [value]="enca.fecha | date:'dd/MM/yyyy' " disabled>
-    </div>
-</div>
-
-<div class="form-row" style="margin-top: 10px;">
-    <div class="col-10">
-        <label class="col-2 col-form-label">Glosa</label>
-        <input class="form-control col-9" type="text" [value]="enca.glosa" name="enca.glosa" [(ngModel)]="enca.glosa">
-    </div>
-    <div class="col-2" *ngIf="deta.length > 0">
-        <button class="btn btn-primary btn-block" type="button" (click)="grabarRecepcion()">Validar y Grabar recepción</button>
-    </div>
-</div>
-
-<mat-progress-bar *ngIf=" grabando " mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf=" grabando " mode="indeterminate" style="margin-top: 10px;"></mat-progress-bar>
 
 <div classs="card" style="margin-top: 20px;">
     <table class="table table-bordered">
@@ -103,8 +98,8 @@
                 </td>
                 <!--  -->
                 <td style="padding-top: 18px;">{{det.unidadMed}}</td>
-                <td style="padding-top: 18px;" class="text-right">{{det.netoUnitario | number:"1.0-0"}}</td>
-                <td style="padding-top: 18px;" class="text-right">{{det.subTotal | number:"1.0-0"}}</td>
+                <td style="padding-top: 18px;" class="text-right">n/a</td>
+                <td style="padding-top: 18px;" class="text-right">n/a</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-link" (click)="eliminarItem( det )">
                         <!-- <i class="material-icon" >delete</i> -->
@@ -121,7 +116,8 @@
                 <th></th>
                 <th></th>
                 <th class="text-right">Total</th>
-                <th class="text-right">{{ totalItemes | number:"1.0-0"}}</th>
+                <!-- <th class="text-right">{{ totalItemes | number:"1.0-0"}}</th> -->
+                <th class="text-right">n/a</th>
                 <th>&nbsp;</th>
             </tr>
             <tfoot>

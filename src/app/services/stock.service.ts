@@ -45,14 +45,9 @@ export class StockService {
     return this.http.post( xUrl, body );
   }
 
-  retieveCausales() {
-    const xUrl = this.API_URL + '/causalesConsumo' ;
-    return this.http.get( xUrl );
-  }
-
   retieveAuxiliares() {
     const xUrl = this.API_URL + '/auxiliares' ;
-    return this.http.get( xUrl );
+    return this.http.post( xUrl, {} );
   }
 
   retieveCenCosto( pBodega: string ) {
