@@ -77,7 +77,7 @@ export class IguiascComponent implements OnInit {
       .subscribe( (pdf: any) => {
           setTimeout( () => {
               data.spinn = false;
-              window.open( this.stockSS.API_URL + '/pdf/' + pdf );
+              window.open( 'https://kinetik.cl/varsovienne/pdf/' + pdf );
           }, 600);
       });
   }

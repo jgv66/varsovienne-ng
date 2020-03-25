@@ -237,9 +237,6 @@ export class GuiasrecepComponent implements OnInit {
       //
       this.stockSS.grabarGuiaDeRecepcion( this.enca, this.deta )
           .subscribe( (data: any) => {
-              //
-              // console.log('RESPUESTA -> ', data);
-              //
               this.grabando = false;
               if ( data.resultado === 'ok' ) {
                 Swal.fire({

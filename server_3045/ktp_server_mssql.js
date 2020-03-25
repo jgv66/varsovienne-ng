@@ -5,6 +5,7 @@ var app = express();
 var sql = require('mssql');
 var dbconex = require('./conexion_mssql.js');
 var servicios = require('./k_serviciosweb.js');
+var path = require('path');
 //
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -16,14 +17,14 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// carpeta de imagenes: desde donde se levanta el servidor es esta ruta -> /root/trial-server-001/public
-//app.use(express.static('public'));
-app.use(express.static('./public'));
-
 // servidor escuchando puerto 3020
 var server = app.listen(3045, function() {
     console.log("Escuchando http en el puerto: %s", server.address().port);
 });
+
+const publicpath = path.resolve(__dirname, 'public');
+app.use('/static', express.static( publicpath ));
+const CARPETA_PDF = publicpath + '/pdf/';
 
 // --------------------- end-points
 app.post('/login',
@@ -580,6 +581,7 @@ app.post('/rescatarTraslado',
         // console.log(req.body);
         var queryE = "exec ksp_rescatarTraslado "+req.body.folio.toString()+","+req.body.nrointerno.toString()+",'" +req.body.destino+ "' ;";
         console.log(queryE);
+        //
         sql.close();
         sql.connect(dbconex)
             .then(pool => {
@@ -602,7 +604,8 @@ app.post('/rescatarTraslado',
 app.post('/rescatarDetalle',
     function(req, res) {
         //
-        var queryE = "exec ksp_rescatarDetalle "+req.body.id.toString()+" ;";
+        var queryD = "exec ksp_rescatarDetalle "+req.body.id.toString()+" ;";
+        console.log(queryD);
         // 
         sql.close();
         sql.connect(dbconex)
@@ -729,7 +732,7 @@ app.post('/grabarGuiaDeRecepcion',
                     .query(xquery);
             })
             .then(resultado => {
-                // console.log('grabarGuiaDeRecepcion -> ', resultado);
+                console.log('grabarGuiaDeRecepcion -> ', resultado);
                 if (resultado.recordset[0].ok) {
                     res.json({ resultado: 'ok', datos: resultado.recordset });
                 } else {
@@ -745,8 +748,8 @@ app.post('/grabarGuiaDeRecepcion',
 app.post('/leerGuias',
     function(req, res) {
         //
-        var queryE = "exec ksp_ leerGuias '"+ req.body.fechaIni +"','" +req.body.fechaFin + "','" +req.body.local+ "','"+ ((req.body.tipoDoc === '03') ? 'E' : 'S') +"','"+ req.body.tipoDoc +"' ; ";
-        // console.log(queryE);
+        var queryE = "exec ksp_leerGuias '"+ req.body.fechaIni.replace(/-/g,'') +"','" +req.body.fechaFin.replace(/-/g,'') + "','" +req.body.local+ "','"+ ((req.body.tipoDoc === '03') ? 'E' : 'S') +"','"+ req.body.tipoDoc +"' ; ";
+        console.log(queryE);
         sql.close();
         sql.connect(dbconex)
             .then(pool => {
@@ -773,12 +776,12 @@ app.post('/imprimirGuia',
         console.log('imprimirGuia->', req.body);
         getDatos(req.body)
             .then(resultado => {
-                servicios.PDFDoc(resultado)
+                servicios.PDFDoc( resultado, CARPETA_PDF )
                     .then(file => {
                         res.json({ resultado: 'ok', datos: file });
                     })
                     .catch(err => {
-                        res.json({ resultado: 'error', datos: error });
+                        res.json({ resultado: 'error', datos: err });
                     });
 
             });
@@ -793,23 +796,10 @@ let getDatos = async(body) => {
 let getHeader = async(body) => {
     //
     return new Promise((resolve, reject) => {
-        var queryE = `
-            select doc.Tipo as tipo, doc.NroInt as nroint, doc.Folio as folio, doc.CodBode as codbode, (select top 1 cc.DescCC from ARE_BodComi as cc where cc.CodBode = doc.CodBode) as nomlocal, doc.Concepto as concepto, doc.Estado as estado, convert(nvarchar(10), doc.Fecha, 103) as fecha, doc.Glosa as glosa, doc.Usuario as usuario, doc.CentroDeCosto as ccosto, doc.CodBod as traslado, (select top 1 cc.DescCC from ARE_BodComi as cc where cc.CodBode = doc.CodBod) as nomtraslado, round(doc.NetoAfecto, 0) as neto, round(doc.Iva, 0) as iva, round(doc.Total, 0) as total, (
-                case when k.descConcepto is not null then k.descConcepto when doc.Concepto = '07'
-                then 'Consumo Interno '
-                when doc.Concepto = '06'
-                then 'Traslado entre Bodegas'
-                when doc.Concepto = '03'
-                then 'Recepcion de Mercaderías'
-                else '??????'
-                end) as descconcepto, k.ccosto, k.causal
-            from softland.iw_gsaen as doc
-            left join ktb_guia_encabezado as k with(nolock) on k.tipo = doc.tipo and k.folio = doc.folio and k.nrointerno = doc.NroInt
-            where doc.Tipo = '${ body.tipo }'
-            and doc.Folio = '${ body.folio }'
-            and doc.NroInt = '${ body.nroint }';
-            `;
+        //
+        var queryE = "exec ksp_getHeader '"+body.tipo+"','"+body.folio+"',"+body.nroint+"  ;";
         console.log(queryE);
+        //
         sql.close();
         sql.connect(dbconex)
             .then(pool => {
@@ -832,18 +822,10 @@ let getHeader = async(body) => {
 let getDetail = (body) => {
     //
     return new Promise((resolve, reject) => {
-        var queryD = `
-            select d.CodProd as codigo, d.DetProd as descripcion, (
-                case when e.Concepto = '03'
-                then d.CantIngresada
-                else d.CantDespachada end) as cantidad, d.CodUMed as unidad, d.PreUniMB as precio, d.TotLinea as subtotal
-            from softland.iw_gsaen as e
-            inner join softland.iw_gmovi as d on d.Tipo = e.Tipo and e.NroInt = d.NroInt
-            where e.Tipo = '${ body.tipo }'
-            and e.Folio = '${ body.folio }'
-            and e.NroInt = '${ body.nroint }';
-            `;
-        // console.log(queryD);
+        //
+        var queryD = "exec ksp_getDetail '"+body.tipo+"','"+body.folio+"',"+body.nroint.toString()+" ;";
+        console.log(queryD);
+        //
         sql.close();
         sql.connect(dbconex)
             .then(pool => {

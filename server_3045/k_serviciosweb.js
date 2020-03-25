@@ -3,12 +3,13 @@ var pdfs = require('html-pdf');
 var path = require('path');
 // var fs = require('fs');
 
-publicpath = path.resolve(__dirname, 'public');
-CARPETA_PDF = publicpath + '/pdf/';
+// publicpath = path.resolve(__dirname, 'public');
+// app.use('/static', express.static( publicpath ));
+// CARPETA_PDF = publicpath + '/pdf/';
 
 module.exports = {
     //
-    PDFDoc: function(resultado) {
+    PDFDoc: function( resultado, CARPETA_PDF ) {
         //
         return new Promise((resolve, reject) => {
 
@@ -21,6 +22,8 @@ module.exports = {
             // shortname = 'GDV.pdf';
             shortname = `GDV_${ enca.folio.toString() }_${ enca.nroint.toString() }_${ hora }_${ minu }.pdf`;
             filename = path.join(CARPETA_PDF, shortname);
+            //
+            console.log( 'filename -> ', filename );
             //
             var contenido = `                       
                             <html>
@@ -135,21 +138,3 @@ module.exports = {
     },
 };
 
-/*
-                                            -- <tr>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td style="font-weight: bold;">IVA</td>
-                                            --     <td align="right" style="font-weight: bold;">${ enca.iva.toString() }</td>
-                                            -- </tr>
-                                            -- <tr>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td>&nbsp;</td>
-                                            --     <td style="font-weight: bold;">Total</td>
-                                            --     <td align="right" style="font-weight: bold;">${ enca.total.toString() }</td>
-                                            -- </tr>
-*/
