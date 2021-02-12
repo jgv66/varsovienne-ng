@@ -18,12 +18,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // servidor escuchando puerto 3020
-var server = app.listen(3045, function() {
+var server = app.listen(3020, function() {
     console.log("Escuchando http en el puerto: %s", server.address().port);
 });
 
 const publicpath = path.resolve(__dirname, 'public');
-app.use('/static', express.static( publicpath ));
+app.use('/static', express.static(publicpath));
 const CARPETA_PDF = publicpath + '/pdf/';
 
 // --------------------- end-points
@@ -579,7 +579,7 @@ app.post('/rescatarTraslado',
     function(req, res) {
         //
         // console.log(req.body);
-        var queryE = "exec ksp_rescatarTraslado "+req.body.folio.toString()+","+req.body.nrointerno.toString()+",'" +req.body.destino+ "' ;";
+        var queryE = "exec ksp_rescatarTraslado " + req.body.folio.toString() + "," + req.body.nrointerno.toString() + ",'" + req.body.destino + "' ;";
         console.log(queryE);
         //
         sql.close();
@@ -604,7 +604,7 @@ app.post('/rescatarTraslado',
 app.post('/rescatarDetalle',
     function(req, res) {
         //
-        var queryD = "exec ksp_rescatarDetalle "+req.body.id.toString()+" ;";
+        var queryD = "exec ksp_rescatarDetalle " + req.body.id.toString() + " ;";
         console.log(queryD);
         // 
         sql.close();
@@ -748,7 +748,7 @@ app.post('/grabarGuiaDeRecepcion',
 app.post('/leerGuias',
     function(req, res) {
         //
-        var queryE = "exec ksp_leerGuias '"+ req.body.fechaIni.replace(/-/g,'') +"','" +req.body.fechaFin.replace(/-/g,'') + "','" +req.body.local+ "','"+ ((req.body.tipoDoc === '03') ? 'E' : 'S') +"','"+ req.body.tipoDoc +"' ; ";
+        var queryE = "exec ksp_leerGuias '" + req.body.fechaIni.replace(/-/g, '') + "','" + req.body.fechaFin.replace(/-/g, '') + "','" + req.body.local + "','" + ((req.body.tipoDoc === '03') ? 'E' : 'S') + "','" + req.body.tipoDoc + "' ; ";
         console.log(queryE);
         sql.close();
         sql.connect(dbconex)
@@ -776,7 +776,7 @@ app.post('/imprimirGuia',
         console.log('imprimirGuia->', req.body);
         getDatos(req.body)
             .then(resultado => {
-                servicios.PDFDoc( resultado, CARPETA_PDF )
+                servicios.PDFDoc(resultado, CARPETA_PDF)
                     .then(file => {
                         res.json({ resultado: 'ok', datos: file });
                     })
@@ -797,7 +797,7 @@ let getHeader = async(body) => {
     //
     return new Promise((resolve, reject) => {
         //
-        var queryE = "exec ksp_getHeader '"+body.tipo+"','"+body.folio+"',"+body.nroint+"  ;";
+        var queryE = "exec ksp_getHeader '" + body.tipo + "','" + body.folio + "'," + body.nroint + "  ;";
         console.log(queryE);
         //
         sql.close();
@@ -823,7 +823,7 @@ let getDetail = (body) => {
     //
     return new Promise((resolve, reject) => {
         //
-        var queryD = "exec ksp_getDetail '"+body.tipo+"','"+body.folio+"',"+body.nroint.toString()+" ;";
+        var queryD = "exec ksp_getDetail '" + body.tipo + "','" + body.folio + "'," + body.nroint.toString() + " ;";
         console.log(queryD);
         //
         sql.close();

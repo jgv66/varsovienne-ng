@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'https://api.kinetik.cl/varsovienne'
+  API_URL: 'https://api.varsovienne.kinetik.cl'
 };
 
 /*

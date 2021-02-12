@@ -50,6 +50,7 @@ export class LoginService implements OnInit {
         .subscribe(
           (data: any) => {
               try {
+                console.log(data);
                 this.localesPermitidos = ( data.datos.length > 0 ) ? data.datos : [];
                 this.todosLosLocales();
               } catch (error) {
@@ -69,6 +70,7 @@ export class LoginService implements OnInit {
         .subscribe(
           (data: any) => {
               try {
+                console.log(data);
                 this.todoLocal = ( data.datos.length > 0 ) ? data.datos : [];
               } catch (error) {
                 this.todoLocal = [];
