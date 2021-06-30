@@ -22,9 +22,10 @@ var server = app.listen(3020, function() {
     console.log("Escuchando http en el puerto: %s", server.address().port);
 });
 
-const publicpath = path.resolve(__dirname, 'public');
+publicpath = path.resolve(__dirname, 'public');
 app.use('/static', express.static(publicpath));
-const CARPETA_PDF = publicpath + '/pdf/';
+CARPETA_PDF = publicpath + '/pdf/';
+console.log(CARPETA_PDF);
 
 // --------------------- end-points
 app.post('/login',

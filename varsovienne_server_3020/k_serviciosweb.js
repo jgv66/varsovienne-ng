@@ -9,7 +9,7 @@ var path = require('path');
 
 module.exports = {
     //
-    PDFDoc: function( resultado, CARPETA_PDF ) {
+    PDFDoc: function(resultado, CARPETA_PDF) {
         //
         return new Promise((resolve, reject) => {
 
@@ -23,7 +23,7 @@ module.exports = {
             shortname = `GDV_${ enca.folio.toString() }_${ enca.nroint.toString() }_${ hora }_${ minu }.pdf`;
             filename = path.join(CARPETA_PDF, shortname);
             //
-            console.log( 'filename -> ', filename );
+            console.log('filename -> ', filename);
             //
             var contenido = `                       
                             <html>
@@ -137,4 +137,3 @@ module.exports = {
         });
     },
 };
-

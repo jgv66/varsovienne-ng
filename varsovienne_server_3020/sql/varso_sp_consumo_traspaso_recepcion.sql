@@ -429,12 +429,6 @@ BEGIN
 				cerrado			bit				,
 				glosa_traspaso	varchar(255)	 );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 )
-		begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		-- select * From @t_enca;
 		--
@@ -455,11 +449,6 @@ BEGIN
 				traspasado		bit				,
 				glosa_traspaso	varchar(80)	    );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 ) begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		-- select * From @t_deta;
 		--
@@ -614,12 +603,6 @@ BEGIN
 				cerrado			bit				,
 				glosa_traspaso	varchar(255)	 );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 )
-		begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		-- select * From @t_enca;
 		--
@@ -640,11 +623,6 @@ BEGIN
 				traspasado		bit				,
 				glosa_traspaso	varchar(80)	    );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 ) begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		-- select * From @t_deta;
 		--
@@ -805,12 +783,6 @@ BEGIN
 				cerrado			bit				,
 				glosa_traspaso	varchar(255)	 );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 )
-		begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		--select * From @t_enca;
 		--
@@ -831,11 +803,6 @@ BEGIN
 				traspasado		bit				,
 				glosa_traspaso	varchar(80)	    );  
 		--
-		set  @Error = @@ERROR
-		if ( @Error <> 0 ) begin
-			set @ErrMsg = ERROR_MESSAGE();
-			THROW @Error, @ErrMsg, 0 ;  
-		end				
 		--
 		--select * From @t_deta;
 		--

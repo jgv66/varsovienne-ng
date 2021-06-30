@@ -12,6 +12,10 @@ AS
 BEGIN
 	--
 	SET NOCOUNT ON;
+	-- ex. from docs.microsoft.com
+	DECLARE @ErrorMessage NVARCHAR(4000);  
+	DECLARE @ErrorSeverity INT;  
+	DECLARE @ErrorState INT;  
 	-- variable de error
 	declare @error_vendedor	bit = 0,
 			@xerr_desc		nvarchar(400) = '';
@@ -78,21 +82,16 @@ BEGIN
 		--*********************
 		SET ANSI_WARNINGS  OFF;
 		--Inserto cabecera
-print 1111
-SELECT 'lo q se grabará','S', @NroInt, 'A', @CODALMACEN, null, @folio, rtrim(a.concepto), 'V', cast( a.fecha as datetime),'guia interna de consumo', 'C', a.ccosto, 'A',
- @CODVENDEDOR, '01',      cast(a.usuario as varchar(8)), a.ccosto,      a.neto,     a.iva, a.neto,   a.bruto, 'IW',    'guia consumo interno', getdate(),      3,              'A',       (CASE WHEN a.electronico = 1 THEN 52 ELSE 50 END), 1,                      1,         2,       0,             0,          0,            0,               0,                0,                0,     0,       0,          0,            0,          0,          0,        0,          0,        0,          0,        0,          0,        0,          0,        0,         0,     0,        0,                0,            0,           0,           0,            0,           0,           0,        0,          0,            0,            0,            0,       0,              0,            0,         0,          0,               0,          0   	
-FROM ktb_guia_encabezado AS a with (nolock)
-WHERE id = @id_ktb;
 		INSERT INTO	BVARSOVIENNE.softland.iw_gsaen
 				( Tipo, NroInt,  SubTipoDocto, CodBode,     CodBod, Folio,  Concepto,          Estado, Fecha,                     Glosa,                     AuxTipo, CodiCC,   SubTipDocRef, CodVendedor,  CodMoneda, Usuario,                       CentrodeCosto, NetoAfecto, IVA,   Subtotal, Total,   Sistema, Proceso,                FecHoraCreacion,TipoServicioSII,TipDocRef, DTE_SiiTDoc,                                       FactorCostoImportacion, TipoTrans, FmaPago, EsImportacion, ContabenCW, TipoDespacho, TotalDescBoleta, PorcCredEmpConst, DescCredEmpConst, Orden, Factura, AuxGuiaNum, Equivalencia, NetoExento, PorcDesc01, Descto01, PorcDesc02, Descto02, PorcDesc03, Descto03, PorcDesc04, Descto04, PorcDesc05, Descto05, TotalDesc, Flete, Embalaje, StockActualizado, EnMantencion, ContabVenta, ContabCosto, ContDespPend, ContConsumo, ContVtaComp, nvnumero, ContabPago, NumGuiaTrasp, FueExportado, esDevolucion, MarcaWG, ListaMayorista, BoletaFiscal, ImpresaOK, ContabenPW, DescLisPreenMov, MotivoNCND, CorrelativoAprobacion )
 		SELECT    'S',  @NroInt, 'A',          @CODALMACEN, null,   @folio, rtrim(a.concepto), 'V',    cast( a.fecha as datetime),'guia interna de consumo', 'C',     a.ccosto, 'A',	      @CODVENDEDOR, '01',      cast(a.usuario as varchar(8)), a.ccosto,      a.neto,     a.iva, a.neto,   a.bruto, 'IW',    'guia consumo interno', getdate(),      3,              'A',       (CASE WHEN a.electronico = 1 THEN 52 ELSE 50 END), 1,                      1,         2,       0,             0,          0,            0,               0,                0,                0,     0,       0,          0,            0,          0,          0,        0,          0,        0,          0,        0,          0,        0,          0,        0,         0,     0,        0,                0,            0,           0,           0,            0,           0,           0,        0,          0,            0,            0,            0,       0,              0,            0,         0,          0,               0,          0   	
 		FROM ktb_guia_encabezado AS a with (nolock)
 		WHERE id = @id_ktb;
-print 222
+		-- print 222
 		--
-		select 1/0
-print 333
-		--
+		-- select 1/0
+		-- print 333
+		--=¡
 		SET ANSI_WARNINGS  OFF;
 		--Ahora inserto el detalle
 		INSERT INTO	BVARSOVIENNE.softland.iw_gmovi
@@ -101,7 +100,7 @@ print 333
 		FROM ktb_guia_detalle AS b with (nolock) 
 		INNER JOIN ktb_guia_encabezado AS a with (nolock) ON b.id_padre = a.id
 		WHERE id_padre = @id_ktb
-print 4444
+		-- print 4444
 		--
 		-- consumo efectuado
 		UPDATE ktb_guia_encabezado SET traspasado = 1,	glosa_traspaso = 'ok', folio = @folio, nrointerno = @NroInt WHERE id = @id_ktb
@@ -115,11 +114,23 @@ print 4444
 	end try
 	--
 	begin catch
-		-- traspaso con error
-		UPDATE ktb_guia_encabezado SET traspasado = 0,	glosa_traspaso = left( @ErrMsg, 200 ) WHERE id = @id_ktb;
 		--
-		THROW @Error, @ErrMsg, 0 ;  
-		--		
+		SELECT   
+			@ErrorMessage = ERROR_MESSAGE(),  
+			@ErrorSeverity = ERROR_SEVERITY(),  
+			@ErrorState = ERROR_STATE();  
+		-- traspaso con error
+		UPDATE ktb_guia_encabezado SET traspasado = 0,	glosa_traspaso = left( @ErrorMessage, 200 ) WHERE id = @id_ktb;
+		--
+		-- Use RAISERROR inside the CATCH block to return error  
+		-- information about the original error that caused  
+		-- execution to jump to the CATCH block.  
+		RAISERROR (@ErrorMessage, -- Message text.  
+				   @ErrorSeverity, -- Severity.  
+				   @ErrorState -- State.  
+				   );  		
+		-- THROW @ErrorSeverity, @ErrorMessage, 0 ;  
+  		--		
 	end catch;
 	--
 	-- Habilito triggers conflictivos por APP_NAME() que se guarda en un varchar chico de 50, problema de programática gente Softland.
@@ -127,3 +138,4 @@ print 4444
 	--
 END
 go
+-- select * from ktb_guia_encabezado
